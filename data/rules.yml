@@ -1,0 +1,29 @@
+version: "3.1"
+
+rules:
+
+- rule: Say goodbye anytime the user says goodbye
+  steps:
+  - intent: goodbye
+  - action: utter_goodbye
+
+- rule: Say 'I am a bot' anytime the user challenges
+  steps:
+  - intent: bot_challenge
+  - action: utter_iamabot
+
+- rule: Activate turn on light action
+  steps:
+  - intent: turn_on_light
+  - slot_was_set:
+      - light_id: null  # Ask if not provided
+  - action: utter_ask_light_id
+  - action: action_turn_on_light
+
+- rule: Activate turn off light action
+  steps:
+  - intent: turn_off_light
+  - slot_was_set:
+      - light_id: null  # Ask if not provided
+  - action: utter_ask_light_id
+  - action: action_turn_off_light

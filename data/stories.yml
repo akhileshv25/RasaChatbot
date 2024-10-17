@@ -1,0 +1,44 @@
+version: "3.1"
+
+stories:
+
+- story: happy path
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: mood_great
+  - action: utter_happy
+
+- story: sad path 1
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: mood_unhappy
+  - action: utter_cheer_up
+  - action: utter_did_that_help
+  - intent: affirm
+  - action: utter_happy
+
+- story: sad path 2
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: mood_unhappy
+  - action: utter_cheer_up
+  - action: utter_did_that_help
+  - intent: deny
+  - action: utter_goodbye
+  
+- story: Turn on the light story
+  steps:
+  - intent: turn_on_light
+  - slot_was_set:
+    - light_id: "2"  
+  - action: action_turn_on_light
+
+- story: Turn off the light story
+  steps:
+  - intent: turn_off_light
+  - slot_was_set:
+    - light_id: "3"   
+  - action: action_turn_off_light
