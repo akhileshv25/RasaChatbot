@@ -1,0 +1,26 @@
+{
+  "lookup": {
+    "rules": {
+      "[{\"prev_action\": {\"action_name\": \"action_listen\"}, \"slots\": {\"light_id\": \"should_not_be_set\"}, \"user\": {\"intent\": \"turn_off_light\"}}]": "utter_ask_light_id",
+      "[{\"prev_action\": {\"action_name\": \"action_listen\"}, \"slots\": {\"light_id\": \"should_not_be_set\"}, \"user\": {\"intent\": \"turn_off_light\"}}, {\"prev_action\": {\"action_name\": \"utter_ask_light_id\"}, \"slots\": {\"light_id\": \"should_not_be_set\"}, \"user\": {\"intent\": \"turn_off_light\"}}]": "action_turn_off_light",
+      "[{\"prev_action\": {\"action_name\": \"action_listen\"}, \"slots\": {\"light_id\": \"should_not_be_set\"}, \"user\": {\"intent\": \"turn_off_light\"}}, {\"prev_action\": {\"action_name\": \"utter_ask_light_id\"}, \"slots\": {\"light_id\": \"should_not_be_set\"}, \"user\": {\"intent\": \"turn_off_light\"}}, {\"prev_action\": {\"action_name\": \"action_turn_off_light\"}, \"slots\": {\"light_id\": \"should_not_be_set\"}, \"user\": {\"intent\": \"turn_off_light\"}}]": "action_listen",
+      "[{\"prev_action\": {\"action_name\": \"action_listen\"}, \"slots\": {\"light_id\": \"should_not_be_set\"}, \"user\": {\"intent\": \"turn_on_light\"}}]": "utter_ask_light_id",
+      "[{\"prev_action\": {\"action_name\": \"action_listen\"}, \"slots\": {\"light_id\": \"should_not_be_set\"}, \"user\": {\"intent\": \"turn_on_light\"}}, {\"prev_action\": {\"action_name\": \"utter_ask_light_id\"}, \"slots\": {\"light_id\": \"should_not_be_set\"}, \"user\": {\"intent\": \"turn_on_light\"}}]": "action_turn_on_light",
+      "[{\"prev_action\": {\"action_name\": \"action_listen\"}, \"slots\": {\"light_id\": \"should_not_be_set\"}, \"user\": {\"intent\": \"turn_on_light\"}}, {\"prev_action\": {\"action_name\": \"utter_ask_light_id\"}, \"slots\": {\"light_id\": \"should_not_be_set\"}, \"user\": {\"intent\": \"turn_on_light\"}}, {\"prev_action\": {\"action_name\": \"action_turn_on_light\"}, \"slots\": {\"light_id\": \"should_not_be_set\"}, \"user\": {\"intent\": \"turn_on_light\"}}]": "action_listen"
+    },
+    "rule_only_slots": [],
+    "rule_only_loops": [],
+    "rules_for_loop_unhappy_path": {},
+    "rules_not_in_stories": [
+      "predicting default action with intent restart",
+      "predicting default action with intent back",
+      "[{\"prev_action\": {\"action_name\": \"action_listen\"}, \"slots\": {\"light_id\": \"should_not_be_set\"}, \"user\": {\"intent\": \"turn_on_light\"}}]",
+      "[{\"prev_action\": {\"action_name\": \"action_listen\"}, \"slots\": {\"light_id\": \"should_not_be_set\"}, \"user\": {\"intent\": \"turn_off_light\"}}, {\"prev_action\": {\"action_name\": \"utter_ask_light_id\"}, \"slots\": {\"light_id\": \"should_not_be_set\"}, \"user\": {\"intent\": \"turn_off_light\"}}, {\"prev_action\": {\"action_name\": \"action_turn_off_light\"}, \"slots\": {\"light_id\": \"should_not_be_set\"}, \"user\": {\"intent\": \"turn_off_light\"}}]",
+      "[{\"prev_action\": {\"action_name\": \"action_listen\"}, \"slots\": {\"light_id\": \"should_not_be_set\"}, \"user\": {\"intent\": \"turn_on_light\"}}, {\"prev_action\": {\"action_name\": \"utter_ask_light_id\"}, \"slots\": {\"light_id\": \"should_not_be_set\"}, \"user\": {\"intent\": \"turn_on_light\"}}]",
+      "predicting default action with intent session_start",
+      "[{\"prev_action\": {\"action_name\": \"action_listen\"}, \"slots\": {\"light_id\": \"should_not_be_set\"}, \"user\": {\"intent\": \"turn_off_light\"}}, {\"prev_action\": {\"action_name\": \"utter_ask_light_id\"}, \"slots\": {\"light_id\": \"should_not_be_set\"}, \"user\": {\"intent\": \"turn_off_light\"}}]",
+      "[{\"prev_action\": {\"action_name\": \"action_listen\"}, \"slots\": {\"light_id\": \"should_not_be_set\"}, \"user\": {\"intent\": \"turn_on_light\"}}, {\"prev_action\": {\"action_name\": \"utter_ask_light_id\"}, \"slots\": {\"light_id\": \"should_not_be_set\"}, \"user\": {\"intent\": \"turn_on_light\"}}, {\"prev_action\": {\"action_name\": \"action_turn_on_light\"}, \"slots\": {\"light_id\": \"should_not_be_set\"}, \"user\": {\"intent\": \"turn_on_light\"}}]",
+      "[{\"prev_action\": {\"action_name\": \"action_listen\"}, \"slots\": {\"light_id\": \"should_not_be_set\"}, \"user\": {\"intent\": \"turn_off_light\"}}]"
+    ]
+  }
+}

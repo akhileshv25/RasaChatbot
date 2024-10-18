@@ -1,0 +1,20 @@
+[
+  {
+    "tag_name": "entity",
+    "ids_to_tags": {
+      "1": "B-light_id",
+      "2": "I-light_id",
+      "3": "L-light_id",
+      "4": "U-light_id",
+      "0": "O"
+    },
+    "tags_to_ids": {
+      "B-light_id": 1,
+      "I-light_id": 2,
+      "L-light_id": 3,
+      "U-light_id": 4,
+      "O": 0
+    },
+    "num_tags": 5
+  }
+]

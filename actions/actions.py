@@ -1,92 +1,87 @@
-# This files contains your custom actions which can be used to run
-# custom Python code.
-#
-# See this guide on how to implement these action:
-# https://rasa.com/docs/rasa/custom-actions
-
-
-# This is a simple example for a custom action which utters "Hello World!"
-
-# from typing import Any, Text, Dict, List
-#
-# from rasa_sdk import Action, Tracker
-# from rasa_sdk.executor import CollectingDispatcher
-#
-#
-# class ActionHelloWorld(Action):
-#
-#     def name(self) -> Text:
-#         return "action_hello_world"
-#
-#     def run(self, dispatcher: CollectingDispatcher,
-#             tracker: Tracker,
-#             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-#
-#         dispatcher.utter_message(text="Hello World!")
-#
-#         return []
-
-
 import requests
 from rasa_sdk import Action, Tracker
 from rasa_sdk.executor import CollectingDispatcher
+from rasa_sdk.events import SlotSet
 
 class ActionTurnOnLight(Action):
-
+    
     def name(self) -> str:
         return "action_turn_on_light"
-
+    
     def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: dict):
-        # Fetch the light_id from the slot
         light_id = tracker.get_slot("light_id") 
         
         if light_id is None:
             dispatcher.utter_message(text="Please specify a valid light ID.")
             return []
 
-        url = f"http://localhost:8080/api/lights/change/{light_id}"
+        check_status_url = f"http://localhost:8080/api/lights/list/{light_id}"
+        change_state_url = f"http://localhost:8080/api/lights/change/{light_id}"
         
         try:
-            # Send a request to update the light state to "ON"
-            response = requests.put(url, json={"lightstate": "ON"})
+            status_response = requests.get(check_status_url)
             
-            if response.status_code == 200:
-                dispatcher.utter_message(text=f"Light {light_id} has been turned on.")
+            if status_response.status_code == 200:
+                current_status = status_response.json().get("lightstate", "OFF")
+                
+                if current_status == "ON":
+                    dispatcher.utter_message(text=f"Light {light_id} is already on.")
+                    return [SlotSet("light_id", None)]
+                else:
+                    change_response = requests.put(change_state_url, json={"lightstate": "ON"})
+                    
+                    if change_response.status_code == 200:
+                        dispatcher.utter_message(text=f"Light {light_id} has been turned on.")
+                    else:
+                        dispatcher.utter_message(text="Failed to turn on the light.")
             else:
-                dispatcher.utter_message(text="Failed to turn on the light.")
+                dispatcher.utter_message(text="Error: Unable to retrieve the light status.")
+        
         except requests.exceptions.ConnectionError:
             dispatcher.utter_message(text="Error: Unable to connect to the light control API.")
         except Exception as e:
             dispatcher.utter_message(text=f"An unexpected error occurred: {str(e)}")
+        
+        return [SlotSet("light_id", None)]
 
-        return []
 
 class ActionTurnOffLight(Action):
-
+    
     def name(self) -> str:
         return "action_turn_off_light"
-
+    
     def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: dict):
-        # Fetch the light_id from the slot
         light_id = tracker.get_slot("light_id") 
         
         if light_id is None:
             dispatcher.utter_message(text="Please specify a valid light ID.")
             return []
 
-        url = f"http://localhost:8080/api/lights/change/{light_id}"
+        check_status_url = f"http://localhost:8080/api/lights/list/{light_id}"
+        change_state_url = f"http://localhost:8080/api/lights/change/{light_id}"
         
         try:
-            # Send a request to update the light state to "OFF"
-            response = requests.put(url, json={"lightstate": "OFF"})
+            status_response = requests.get(check_status_url)
             
-            if response.status_code == 200:
-                dispatcher.utter_message(text=f"Light {light_id} has been turned off.")
+            if status_response.status_code == 200:
+                current_status = status_response.json().get("lightstate", "ON")
+                
+                if current_status == "OFF":
+                    dispatcher.utter_message(text=f"Light {light_id} is already off.")
+                    return [SlotSet("light_id", None)]
+                else:
+                    change_response = requests.put(change_state_url, json={"lightstate": "OFF"})
+                    
+                    if change_response.status_code == 200:
+                        dispatcher.utter_message(text=f"Light {light_id} has been turned off.")
+                    else:
+                        dispatcher.utter_message(text="Failed to turn off the light.")
             else:
-                dispatcher.utter_message(text="Failed to turn off the light.")
+                dispatcher.utter_message(text="Error: Unable to retrieve the light status.")
+        
         except requests.exceptions.ConnectionError:
             dispatcher.utter_message(text="Error: Unable to connect to the light control API.")
         except Exception as e:
             dispatcher.utter_message(text=f"An unexpected error occurred: {str(e)}")
-
-        return []
+        
+        return [SlotSet("light_id", None)]
