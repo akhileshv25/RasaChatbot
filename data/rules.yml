@@ -1,18 +1,22 @@
 version: "3.1"
 
 rules:
-- rule: Activate turn on light action
-  steps:
-  - intent: turn_on_light
-  - slot_was_set:
-      - light_id: null  # Ask if not provided
-  - action: utter_ask_light_id
-  - action: action_turn_on_light
+  - rule: Activate turn on light action
+    steps:
+      - intent: turn_on_light
+      - slot_was_set:
+          - light_id: null
+      - action: utter_ask_light_id
+      - action: action_turn_on_light
 
-- rule: Activate turn off light action
-  steps:
-  - intent: turn_off_light
-  - slot_was_set:
-      - light_id: null  # Ask if not provided
-  - action: utter_ask_light_id
-  - action: action_turn_off_light
+  - rule: Activate turn off light action
+    steps:
+      - intent: turn_off_light
+      - slot_was_set:
+          - light_id: null
+      - action: utter_ask_light_id
+      - action: action_turn_off_light
+  - rule: Greet user
+    steps:
+      - intent: greet
+      - action: utter_greet

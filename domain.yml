@@ -1,8 +1,9 @@
 version: "3.1"
 
 intents:
-  - turn_on_light    
+  - turn_on_light
   - turn_off_light
+  - greet
 
 entities:
   - light_id
@@ -26,8 +27,12 @@ responses:
   utter_light_off:
     - text: "Lights Turned OFF Successfully!!!💡"
 
-  utter_ask_light_id:   # Added a prompt in case light_id is missing
+  utter_ask_light_id:
     - text: "Which light would you like to control? Please specify the light ID."
+
+  utter_greet:
+    - text: "Hello! How can I assist you today?"
+    - text: "Hi there! How can I help you?"
 
 session_config:
   session_expiration_time: 60

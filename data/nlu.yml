@@ -1,17 +1,28 @@
 version: "3.1"
 
 nlu:
+  - intent: turn_on_light
+    examples: |
+      - turn on light [2](light_id)
+      - turn on [2](light_id)
+      - please turn on light [1](light_id)
+      - can you turn on the light [3](light_id)
 
-- intent: turn_on_light
-  examples: |
-    - turn on light [2](light_id)
-    - turn on [2](light_id)
-    - please turn on light [1](light_id)
-    - can you turn on the light [3](light_id)
-  
-- intent: turn_off_light
-  examples: |
-    - turn off light [2](light_id)
-    - turn off [3](light_id)
-    - can you turn off the light [1](light_id)
-    - please turn off the light [2](light_id)
+  - intent: turn_off_light
+    examples: |
+      - turn off light [2](light_id)
+      - turn off [3](light_id)
+      - can you turn off the light [1](light_id)
+      - please turn off the light [2](light_id)
+  - intent: greet
+    examples: |
+      - hello
+      - hi
+      - hey
+      - good morning
+      - good evening
+      - howdy
+      - greetings
+      - hello there
+      - hi there
+      - hey there
