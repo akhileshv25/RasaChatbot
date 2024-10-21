@@ -15,3 +15,17 @@ stories:
   - slot_was_set:
     - light_id: ""   
   - action: action_turn_off_light
+
+- story: Turn on Zone light story
+  steps:
+  - intent: zone_on_lights
+  - slot_was_set:
+    - light_id: ""
+  - action: action_zone_on_lights
+
+- story: Turn off Zone light story
+  steps:
+  - intent: zone_off_lights
+  - slot_was_set:
+    - light_id: ""
+  - action: action_zone_off_lights

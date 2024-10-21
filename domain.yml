@@ -4,9 +4,12 @@ intents:
   - turn_on_light
   - turn_off_light
   - greet
+  - zone_on_lights
+  - zone_off_lights
 
 entities:
   - light_id
+  - zone_name
 
 slots:
   light_id:
@@ -15,10 +18,18 @@ slots:
     mappings:
       - type: from_entity
         entity: light_id
+  zone_name:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: zone_name
 
 actions:
   - action_turn_on_light
   - action_turn_off_light
+  - action_zone_on_lights
+  - action_zone_off_lights
 
 responses:
   utter_task:
@@ -32,7 +43,6 @@ responses:
 
   utter_greet:
     - text: "Hello! How can I assist you today?"
-    - text: "Hi there! How can I help you?"
 
 session_config:
   session_expiration_time: 60

@@ -16,6 +16,21 @@ rules:
           - light_id: null
       - action: utter_ask_light_id
       - action: action_turn_off_light
+
+  - rule: Activate lights on the zone  
+    steps:
+      - intent: zone_on_lights
+      - slot_was_set:
+          - zone_name: null
+      - action: action_zone_on_lights
+
+  - rule: Activate lights off the zone  
+    steps:
+      - intent: zone_off_lights
+      - slot_was_set:
+          - zone_name: null
+      - action: action_zone_off_lights
+
   - rule: Greet user
     steps:
       - intent: greet

@@ -14,6 +14,46 @@ nlu:
       - turn off [3](light_id)
       - can you turn off the light [1](light_id)
       - please turn off the light [2](light_id)
+
+  - intent: zone_on_lights
+    examples: |
+      - turn on [Zone A](zone_name) lights
+      - switch on [Zone A](zone_name) lights
+      - activate the lights in [Zone A](zone_name)
+      - make the lights in [Zone A](zone_name) turn on
+      - turn the lights in [Zone A](zone_name) on
+      - power up the lights in [Zone A](zone_name)
+      - enable [Zone A](zone_name) lights
+      - switch on the lights in [Zone A](zone_name)
+      - set the lights in [Zone A](zone_name) to on
+      - bring up the lights in [Zone A](zone_name)
+      - light up [Zone A](zone_name)
+      - switch on the lights for [Zone A](zone_name)
+      - turn the [Zone A](zone_name) lights on
+      - activate [Zone A](zone_name) lighting
+      - power on the lights in [Zone A](zone_name)
+      - turn on the lights of [Zone A](zone_name)
+
+  - intent: zone_off_lights
+    examples: |
+      - turn off [Zone A](zone_name) lights
+      - switch off [Zone A](zone_name) lights
+      - deactivate the lights in [Zone A](zone_name)
+      - make the lights in [Zone A](zone_name) turn off
+      - turn the lights in [Zone A](zone_name) off
+      - power down the lights in [Zone A](zone_name)
+      - disable [Zone A](zone_name) lights
+      - switch off the lights in [Zone A](zone_name)
+      - set the lights in [Zone A](zone_name) to off
+      - dim the lights in [Zone A](zone_name)
+      - turn off the lights for [Zone A](zone_name)
+      - turn the [Zone A](zone_name) lights off
+      - deactivate [Zone A](zone_name) lighting
+      - power off the lights in [Zone A](zone_name)
+      - turn off the lights of [Zone A](zone_name)
+    
+
+
   - intent: greet
     examples: |
       - hello

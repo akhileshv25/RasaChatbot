@@ -100,3 +100,79 @@ class ActionTurnOffLight(Action):
                 text=f"An unexpected error occurred: {str(e)}")
 
         return [SlotSet("light_id", None)]
+    
+
+class ActionZoneOnLight(Action):
+        
+    def name(self) -> str:
+        return "action_zone_on_lights"
+    
+    def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: dict):
+        zone_name = tracker.get_slot("zone_name")
+
+        if zone_name is None:
+            dispatcher.utter_message(text="Please specify a valid Zone Name.")
+            return []
+
+        change_state_url = f"http://localhost:8080/api/lights/update-state/{zone_name}"
+
+        try:
+            change_response = requests.put(
+                change_state_url, json={"lightstate": "ON"})
+
+            if change_response.status_code == 200:
+                dispatcher.utter_message(
+                    text=f"{zone_name} lights have been turned on 💡.")
+            elif change_response.status_code == 226:  
+                dispatcher.utter_message(
+                    text=f"{zone_name} lights are already on 💡.")
+            else:
+                dispatcher.utter_message(
+                    text=f"Failed to turn on the lights in {zone_name} 💡.")
+
+        except requests.exceptions.ConnectionError:
+            dispatcher.utter_message(
+                text="Error: Unable to connect to the light control API.")
+        except Exception as e:
+            dispatcher.utter_message(
+                text=f"An unexpected error occurred: {str(e)}")
+
+        return [SlotSet("zone_name", None)]  
+
+
+class ActionZoneOffLight(Action):
+        
+    def name(self) -> str:
+        return "action_zone_off_lights"
+    
+    def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: dict):
+        zone_name = tracker.get_slot("zone_name")
+
+        if zone_name is None:
+            dispatcher.utter_message(text="Please specify a valid Zone Name.")
+            return []
+
+        change_state_url = f"http://localhost:8080/api/lights/update-state/{zone_name}"
+
+        try:
+            change_response = requests.put(
+                change_state_url, json={"lightstate": "OFF"})
+
+            if change_response.status_code == 200:
+                dispatcher.utter_message(
+                    text=f"{zone_name} lights have been turned off 💡.")
+            elif change_response.status_code == 226:  
+                dispatcher.utter_message(
+                    text=f"{zone_name} lights are already off 💡.")
+            else:
+                dispatcher.utter_message(
+                    text=f"Failed to turn off the lights in {zone_name} 💡.")
+
+        except requests.exceptions.ConnectionError:
+            dispatcher.utter_message(
+                text="Error: Unable to connect to the light control API.")
+        except Exception as e:
+            dispatcher.utter_message(
+                text=f"An unexpected error occurred: {str(e)}")
+
+        return [SlotSet("zone_name", None)]  
