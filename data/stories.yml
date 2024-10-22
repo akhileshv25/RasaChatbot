@@ -29,3 +29,17 @@ stories:
   - slot_was_set:
     - light_id: ""
   - action: action_zone_off_lights
+
+- story: schedules for the zone story
+  steps:
+  - intent: schedules
+  - slot_was_set:
+    - zone_name: null
+    - light_state: null
+    - brightness_level: null
+    - start_time: null
+    - end_time: null
+    - rule: null
+    - end_year: null
+  - action: action_schedules
+  - action: utter_schedules

@@ -30,6 +30,19 @@ rules:
       - slot_was_set:
           - zone_name: null
       - action: action_zone_off_lights
+  - rule: schedule the ligth on or off for the Zone
+    steps:
+      - intent: schedules
+      - slot_was_set:
+          - zone_name: null
+          - light_state: null
+          - brightness_level: null
+          - start_time: null
+          - end_time: null
+          - rule: null
+          - end_year: null
+      - action: action_schedules
+      - action: utter_schedules
 
   - rule: Greet user
     steps:

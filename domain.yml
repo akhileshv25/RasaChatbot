@@ -6,10 +6,18 @@ intents:
   - greet
   - zone_on_lights
   - zone_off_lights
+  - schedules
+
 
 entities:
   - light_id
   - zone_name
+  - light_state
+  - brightness_level
+  - start_time
+  - end_time
+  - rule
+  - end_year
 
 slots:
   light_id:
@@ -18,6 +26,7 @@ slots:
     mappings:
       - type: from_entity
         entity: light_id
+
   zone_name:
     type: text
     influence_conversation: true
@@ -25,11 +34,55 @@ slots:
       - type: from_entity
         entity: zone_name
 
+  light_state:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: light_state
+
+  brightness_level:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: brightness_level
+
+  start_time:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: start_time
+
+  end_time:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: end_time
+
+  rule:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: rule
+
+  end_year:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: end_year
+
 actions:
   - action_turn_on_light
   - action_turn_off_light
   - action_zone_on_lights
   - action_zone_off_lights
+  - action_schedules
+
 
 responses:
   utter_task:
@@ -43,6 +96,8 @@ responses:
 
   utter_greet:
     - text: "Hello! How can I assist you today?"
+  utter_schedules:
+    - text: "action_schedules performed!!!!!!!!!!!"
 
 session_config:
   session_expiration_time: 60
