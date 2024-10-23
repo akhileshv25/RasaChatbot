@@ -18,6 +18,9 @@ entities:
   - end_time
   - rule
   - end_year
+  - light_state_end
+  - schedule_name
+  - tag
 
 slots:
   light_id:
@@ -75,6 +78,26 @@ slots:
     mappings:
       - type: from_entity
         entity: end_year
+  light_state_end:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: light_state_end
+
+  schedule_name:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: schedule_name
+  tag:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: tag
+
 
 actions:
   - action_turn_on_light

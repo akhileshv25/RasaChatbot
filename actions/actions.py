@@ -2,6 +2,7 @@ import requests
 from rasa_sdk import Action, Tracker
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.events import SlotSet
+from datetime import datetime, timedelta
 
 
 class ActionTurnOnLight(Action):
@@ -250,9 +251,8 @@ class ActionZoneOffLight(Action):
         return [SlotSet("zone_name", None)]  
 
 
-
 class ActionSchedulesLight(Action):
-        
+    
     def name(self) -> str:
         return "action_schedules"
     
@@ -264,9 +264,101 @@ class ActionSchedulesLight(Action):
         end_time = tracker.get_slot("end_time")
         rule = tracker.get_slot("rule")
         end_year = tracker.get_slot("end_year")
+        schedule_name = tracker.get_slot("schedule_name")
+        tag = tracker.get_slot("tag")
+        light_state_end = tracker.get_slot("light_state_end")
 
-        print(zone_name,light_state,brightness_level,start_time,end_time,rule,end_year)
+        print(zone_name, light_state, brightness_level, start_time, end_time, rule, end_year)
+        print(schedule_name, tag, light_state_end)
+
+        if zone_name is None or schedule_name is None:
+            dispatcher.utter_message(text="Please specify valid details.")
+            return []
+
+        if brightness_level is None:
+            brightness_level = 100
+        current_time = datetime.now()
+        if start_time is None:
+            current_time = datetime.now()
+            start_time = current_time.strftime("%Y-%m-%d %H:%M")
+            print(f"Default start time set to: {start_time}")
+
+        try:
+            if "PM" in start_time or "AM" in start_time:
+                parsed_start_time = datetime.strptime(start_time, "%I %p")  
+                parsed_start_time = parsed_start_time.replace(year=current_time.year, month=current_time.month, day=current_time.day)
+            else:
+                parsed_start_time = datetime.strptime(start_time, "%Y-%m-%d %H:%M")
+        except ValueError as e:
+            dispatcher.utter_message(text=f"Error parsing start time: {str(e)}")
+            return []
+
+        start_time_millis = int(parsed_start_time.timestamp() * 1000)
+        print(f"Start time in milliseconds: {start_time_millis}")
+
+        # Handle end_year
+        if end_year is None:
+            end_year_time = parsed_start_time + timedelta(days=365)
+            end_year_millis = int(end_year_time.timestamp() * 1000)
+            print(f"End year {end_year_millis}")
+        else:
+            try:
+                parsed_end_year = datetime.strptime(end_year, "%m/%d/%Y")
+                end_year_time = parsed_end_year.replace(hour=0, minute=0, second=0)
+                end_year_millis = int(end_year_time.timestamp() * 1000)
+                print(f"End year in milliseconds: {end_year_millis}")
+            except ValueError as e:
+                dispatcher.utter_message(text=f"Error parsing end year: {str(e)}")
+                return []
+
+        if end_time is not None:
+            try:
+                parsed_end_time = datetime.strptime(end_time, "%Y-%m-%d %H:%M")
+            except ValueError:
+                try:
+                    parsed_end_time = datetime.strptime(end_time, "%I %p")
+                    parsed_end_time = parsed_end_time.replace(year=current_time.year, month=current_time.month, day=current_time.day)
+                except ValueError as e:
+                    dispatcher.utter_message(text=f"Error parsing end time: {str(e)}")
+                    return []
+
+            end_time_millis = int(parsed_end_time.timestamp() * 1000)
+            print(f"End time in milliseconds: {end_time_millis}")
+        else:
+            dispatcher.utter_message(text="Please provide an end time.")
+            return []
 
 
-        return []
+        schedule_payload = {  
+            "priority": 1,  
+            "lightstate": light_state_end,
+            "lightlevel": brightness_level,
+            "starttime": start_time_millis,  
+            "endtime": end_time_millis,       
+            "recurrenceRule": rule,
+            "startdate": start_time_millis,
+            "enddate": end_year_millis,
+            "schedulename": schedule_name,
+            "zone": {
+                "zoneid": 1
+            }
+        }
 
+        change_state_url = "http://localhost:8080/api/schedules/save"
+
+        try:
+            change_response = requests.post(change_state_url, json=schedule_payload)
+
+            if change_response.status_code == 200:
+                dispatcher.utter_message(text="Schedules have been added.")
+            elif change_response.status_code == 208:  
+                dispatcher.utter_message(text="Schedules already exist.")
+            else:
+                dispatcher.utter_message(text="Failed to save schedules.")
+
+        except requests.exceptions.ConnectionError:
+            dispatcher.utter_message(text="Error: Unable to connect to the schedules control API.")
+        except Exception as e:
+            dispatcher.utter_message(text=f"An unexpected error occurred: {str(e)}")
+
+        return [SlotSet("zone_name", None)]

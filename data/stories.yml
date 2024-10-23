@@ -36,10 +36,13 @@ stories:
   - slot_was_set:
     - zone_name: null
     - light_state: null
+    - light_state_end: null
     - brightness_level: null
     - start_time: null
     - end_time: null
     - rule: null
     - end_year: null
+    - schedule_name: null
+    - tag: null
   - action: action_schedules
   - action: utter_schedules
