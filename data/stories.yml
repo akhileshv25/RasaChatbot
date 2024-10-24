@@ -44,5 +44,6 @@ stories:
     - end_year: null
     - schedule_name: null
     - tag: null
+    - priority: null
   - action: action_schedules
   - action: utter_schedules

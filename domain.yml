@@ -21,6 +21,7 @@ entities:
   - light_state_end
   - schedule_name
   - tag
+  - priority
 
 slots:
   light_id:
@@ -97,6 +98,12 @@ slots:
     mappings:
       - type: from_entity
         entity: tag
+  priority:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: priority
 
 
 actions:

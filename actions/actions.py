@@ -3,7 +3,7 @@ from rasa_sdk import Action, Tracker
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.events import SlotSet
 from datetime import datetime, timedelta
-
+from cron import text_to_cron
 
 class ActionTurnOnLight(Action):
 
@@ -49,7 +49,7 @@ class ActionTurnOnLight(Action):
                 text="Error: Unable to connect to the light control API.")
         except Exception as e:
             dispatcher.utter_message(
-                text=f"An unexpected error occurred: {str(e)}")
+                text=f"An unexpected error occurred!!!!!!!!!: {str(e)}")
 
         return [SlotSet("light_id", None)]
 
@@ -267,14 +267,36 @@ class ActionSchedulesLight(Action):
         schedule_name = tracker.get_slot("schedule_name")
         tag = tracker.get_slot("tag")
         light_state_end = tracker.get_slot("light_state_end")
+        priority = tracker.get_slot("priority")
 
         print(zone_name, light_state, brightness_level, start_time, end_time, rule, end_year)
         print(schedule_name, tag, light_state_end)
+        print(priority)
+
+        if priority is None:
+            priority = 1
+
+        if priority == "high":
+            priority = 1
+        if priority == "medium":
+            priority = 2
+        if priority == "low":
+            priority = 3
 
         if zone_name is None or schedule_name is None:
             dispatcher.utter_message(text="Please specify valid details.")
             return []
-
+        
+        if light_state == "on" or light_state == "ON" or light_state == "activate" or light_state == "Activate":
+            light_state = "ON"
+        
+        if light_state == "off" or light_state == "OFF" or light_state == "deactivate" or light_state == "Deactivate":
+            light_state = "OFF"
+        if light_state_end == "on" or light_state_end == "ON" or light_state_end == "activate" or light_state_end == "Activate" or light_state_end =="turn them on":
+            light_state_end = "ON"
+        
+        if light_state_end == "off" or light_state_end == "OFF" or light_state_end == "deactivate" or light_state_end == "Deactivate" or light_state_end =="turn them off":
+            light_state_end = "OFF"
         if brightness_level is None:
             brightness_level = 100
         current_time = datetime.now()
@@ -296,7 +318,7 @@ class ActionSchedulesLight(Action):
         start_time_millis = int(parsed_start_time.timestamp() * 1000)
         print(f"Start time in milliseconds: {start_time_millis}")
 
-        # Handle end_year
+        
         if end_year is None:
             end_year_time = parsed_start_time + timedelta(days=365)
             end_year_millis = int(end_year_time.timestamp() * 1000)
@@ -328,19 +350,47 @@ class ActionSchedulesLight(Action):
             dispatcher.utter_message(text="Please provide an end time.")
             return []
 
+        zoneidbyname = f"http://localhost:8080/api/zones/byName/{zone_name}"
+
+        try:
+            status_response = requests.get(zoneidbyname)
+
+            if status_response.status_code == 200:
+                zoneId_response = status_response.json()  
+                print(zoneId_response) 
+
+                if isinstance(zoneId_response, dict):
+                    zoneId = zoneId_response.get("zoneid")  
+                    if zoneId is None:
+                        dispatcher.utter_message(text="Error: Zone ID not found in the response.")
+                        return []
+                elif isinstance(zoneId_response, int):
+                    zoneId = zoneId_response
+                else:
+                    dispatcher.utter_message(text="Error: Unexpected response format.")
+                    return []
+
+            else:
+                dispatcher.utter_message(text=f"Error: Received unexpected status code {status_response.status_code}.")
+                
+        except requests.exceptions.ConnectionError:
+            dispatcher.utter_message(text="Error: Unable to connect to the zone list API.")
+        except Exception as e:
+            dispatcher.utter_message(text=f"An unexpected error occurred: {str(e)}")
+            return []
 
         schedule_payload = {  
-            "priority": 1,  
+            "priority": priority,  
             "lightstate": light_state_end,
             "lightlevel": brightness_level,
             "starttime": start_time_millis,  
             "endtime": end_time_millis,       
-            "recurrenceRule": rule,
+            "recurrenceRule": text_to_cron(rule),
             "startdate": start_time_millis,
             "enddate": end_year_millis,
             "schedulename": schedule_name,
             "zone": {
-                "zoneid": 1
+                "zoneid": zoneId
             }
         }
 
@@ -359,6 +409,17 @@ class ActionSchedulesLight(Action):
         except requests.exceptions.ConnectionError:
             dispatcher.utter_message(text="Error: Unable to connect to the schedules control API.")
         except Exception as e:
-            dispatcher.utter_message(text=f"An unexpected error occurred: {str(e)}")
+            dispatcher.utter_message(text=f"An unexpected error occurred 222: {str(e)}")
 
-        return [SlotSet("zone_name", None)]
+        return [
+            SlotSet("zone_name", None),
+            SlotSet("light_state", None),
+            SlotSet("brightness_level", None),
+            SlotSet("start_time", None),
+            SlotSet("end_time", None),
+            SlotSet("rule", None),
+            SlotSet("end_year", None),
+            SlotSet("schedule_name", None),
+            SlotSet("tag", None),
+            SlotSet("light_state_end", None),
+        ]
