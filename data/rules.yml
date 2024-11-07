@@ -47,8 +47,44 @@ rules:
           - priority: null
       - action: action_schedules
       - action: utter_schedules
+  - rule: chage brightness rule of the Zone
+    steps:
+      - intent: brightness_Zone
+      - slot_was_set:
+        - zone_name: null
+        - brightness_level: null
+      - action: action_brightness
+
+  - rule: update brightness rule for the zone light
+    steps:
+      - intent: brightness_light
+      - slot_was_set:
+        - zone_name: null
+        - brightness_level: null
+        - light_id: null
+      - action: action_brightness_light
 
   - rule: Greet user
     steps:
       - intent: greet
       - action: utter_greet
+
+  - rule: Ask the user to rephrase whenever they send a message with low NLU confidence
+    steps:
+    - intent: nlu_fallback
+    - action: utter_please_rephrase
+  
+  - rule: brightness fallback 
+    steps: 
+      - intent: brightness_fallback
+      - action: utter_brightness_fallback
+  
+  - rule: other fallback
+    steps:
+    - intent: other_fallback
+    - action: utter_please_rephrase
+  
+  - rule: list all the zone
+    steps:
+      - intent: list_zone
+      - action: action_list_zone

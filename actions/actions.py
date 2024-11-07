@@ -115,7 +115,7 @@ class ActionZoneOnLight(Action):
             dispatcher.utter_message(text="Please specify a valid Zone Name.")
             return []
         if len(zone_name.split()) < 2: 
-            list_all_zones_url = "http://localhost:8080/api/zones/AllZone"
+            list_all_zones_url = "http://localhost:8080/api/zones/list"
 
             try:
                 response = requests.get(list_all_zones_url)
@@ -190,7 +190,7 @@ class ActionZoneOffLight(Action):
             dispatcher.utter_message(text="Please specify a valid Zone Name.")
             return []
         if len(zone_name.split()) < 2: 
-            list_all_zones_url = "http://localhost:8080/api/zones/AllZone"
+            list_all_zones_url = "http://localhost:8080/api/zones/list"
 
             try:
                 response = requests.get(list_all_zones_url)
@@ -423,3 +423,130 @@ class ActionSchedulesLight(Action):
             SlotSet("tag", None),
             SlotSet("light_state_end", None),
         ]
+
+
+
+class ActionZoneBrightness(Action):
+
+    def name(self) -> str:
+        return "action_brightness"
+
+    def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: dict):
+        zone_name = tracker.get_slot("zone_name")
+        brightness_level = tracker.get_slot("brightness_level")
+
+        if zone_name is None:
+            dispatcher.utter_message(text="Please specify a Zone Name.")
+            return []
+        if brightness_level is None:
+            dispatcher.utter_message(text="Please specify a Brightness level.")
+            return []
+
+        change_state_url = f"http://localhost:8080/api/lights/update-brightness/{zone_name}?brightnessLevel={brightness_level}"
+
+        try:
+            change_response = requests.put(change_state_url)
+
+            if change_response.status_code == 200:
+                dispatcher.utter_message(
+                    text=f"The brightness for zone '{zone_name}' has been updated to {brightness_level}.")
+            else:
+                dispatcher.utter_message(
+                    text="Failed to update the brightness. Please try again later.")
+        
+        except requests.exceptions.ConnectionError:
+            dispatcher.utter_message(
+                text="Error: Unable to connect to the light control API. Please check the connection.")
+        except Exception as e:
+            dispatcher.utter_message(
+                text=f"An unexpected error occurred: {str(e)}")
+
+        return [SlotSet("zone_name", None), SlotSet("brightness_level", None)]
+
+
+class ActionLightBrightness(Action):
+
+    def name(self) -> str:
+        return "action_brightness_light"
+
+    def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: dict):
+        zone_name = tracker.get_slot("zone_name")
+        brightness_level = tracker.get_slot("brightness_level")
+        light_id = tracker.get_slot("light_id")
+
+        if zone_name is None:
+            dispatcher.utter_message(text="Please specify a Zone Name.")
+            return []
+        if brightness_level is None:
+            dispatcher.utter_message(text="Please specify a Brightness level.")
+            return []
+        if light_id is None:
+            dispatcher.utter_message(text="Please specify a Light Id.")
+            return []
+
+        change_state_url = f"http://localhost:8080/api/lights/brightness/update/zone/light/{zone_name}?lightid={light_id}&brightnessLevel={brightness_level}"
+
+        try:
+            change_response = requests.put(change_state_url)
+
+            if change_response.status_code == 200:
+                dispatcher.utter_message(
+                    text=f"The brightness for zone '{zone_name}' has been updated to {brightness_level} for the light Id {light_id}.")
+            else:
+                dispatcher.utter_message(
+                    text="Failed to update the brightness. Please try again later.")
+        
+        except requests.exceptions.ConnectionError:
+            dispatcher.utter_message(
+                text="Error: Unable to connect to the light control API. Please check the connection.")
+        except Exception as e:
+            dispatcher.utter_message(
+                text=f"An unexpected error occurred: {str(e)}")
+
+        return [SlotSet("zone_name", None), SlotSet("brightness_level", None),SlotSet("light_id",None)]
+    
+
+import requests
+from rasa_sdk import Action
+from rasa_sdk.executor import CollectingDispatcher
+from rasa_sdk.events import EventType
+from typing import List, Dict, Text, Any
+
+class ActionListZone(Action):
+
+    def name(self) -> str:
+        return "action_list_zone"
+
+    def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]) -> List[EventType]:
+        list_all_zones_url = "http://localhost:8080/api/zones/list"
+
+        try:
+            response = requests.get(list_all_zones_url)
+
+            if response.status_code == 200:
+                zones = response.json()
+
+                if isinstance(zones, list):
+                    table_header = "Zone Name | Address\n" + "-"*30
+                    table_rows = [
+                        f"{zone.get('name', 'Unnamed Zone')} | {zone.get('address', 'No Address')}"
+                        for zone in zones
+                    ]
+                    zone_table = table_header + "\n" + "\n".join(table_rows)
+
+                    dispatcher.utter_message(
+                        text=f"Here are the available zones:\n{zone_table}"
+                    )
+                else:
+                    dispatcher.utter_message(
+                        text="Error: Zone data is not in the expected format."
+                    )
+            else:
+                dispatcher.utter_message(text="Failed to fetch the list of zones.")
+
+        except requests.exceptions.ConnectionError:
+            dispatcher.utter_message(text="Error: Unable to connect to the zone list API.")
+        except Exception as e:
+            dispatcher.utter_message(text=f"An unexpected error occurred: {str(e)}")
+
+        return []

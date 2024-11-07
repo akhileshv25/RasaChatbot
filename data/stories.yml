@@ -47,3 +47,29 @@ stories:
     - priority: null
   - action: action_schedules
   - action: utter_schedules
+- story: chage brightness rule of the Zone Story
+  steps:
+    - intent: brightness_Zone
+    - slot_was_set:
+      - zone_name: "Zone A"
+      - brightness_level: 75
+    - action: action_brightness
+
+- story: update brightness rule of the Zone for specific light
+  steps:
+    - intent: brightness_light
+    - slot_was_set:
+      - light_id: "3"
+      - zone_name: "Zone A"
+      - brightness_level: 75
+    - action: action_brightness_light
+
+- story: brightness fallback 
+  steps: 
+    - intent: brightness_fallback
+    - action: utter_brightness_fallback
+  
+- story: list all the zone
+  steps:
+    - intent: list_zone
+    - action: action_list_zone

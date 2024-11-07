@@ -7,7 +7,13 @@ intents:
   - zone_on_lights
   - zone_off_lights
   - schedules
-
+  - brightness_Zone
+  - affirm  
+  - deny 
+  - brightness_light
+  - other_fallback
+  - brightness_fallback
+  - list_zone
 
 entities:
   - light_id
@@ -22,6 +28,7 @@ entities:
   - schedule_name
   - tag
   - priority
+
 
 slots:
   light_id:
@@ -112,9 +119,15 @@ actions:
   - action_zone_on_lights
   - action_zone_off_lights
   - action_schedules
-
+  - action_brightness
+  - action_brightness_light
+  - action_list_zone
 
 responses:
+  utter_brightness_fallback:
+    - text: "Sorry I didn't get that. Can you specify the Zone name properly?"
+  utter_please_rephrase:
+    - text: Sorry I didn't get that. Can you rephrase?
   utter_task:
     - text: "Lights Turned ON Successfully!!!💡"
 

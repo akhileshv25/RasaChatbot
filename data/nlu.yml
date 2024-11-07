@@ -61,33 +61,6 @@ nlu:
       - Add a schedule called [Weekend Brightness](schedule_name) for [Zone F](zone_name) to [illuminate](light_state) with [75](brightness_level)% brightness starting at [3 PM](start_time) [every Thursday](rule) and [switch off](light_state_end) at [12 AM](end_time) with the tag [weekly](tag) and [medium](priority)
       - Set up a new schedule named [Evening Relax](schedule_name) for Zone G lights to [enable](light_state) at [2 PM](start_time) with [40](brightness_level)% brightness [every Tuesday](rule) and [turn off](light_state_end) at [6 PM](end_time) tagged as [relax](tag) with [low](priority)
       - Brighten [Zone H](zone_name) with [100](brightness_level)% brightness at [1 PM](start_time) on [Holidays](rule) with the schedule name [Holiday Glow](schedule_name) and [switch off](light_state_end) at [5 PM](end_time) tagged as [holiday](tag) with [medium](priority)
-      - Create a new schedule named [Sunday Chill](schedule_name) to [activate](light_state) lights in [Zone I](zone_name) with [30](brightness_level)% brightness at [11 AM](start_time) [every Sunday](rule) and [switch off](light_state_end) at [4 PM](end_time) tagged as [chill](tag) with [high](priority)
-      - Turn [on](light_state) the lights in [Zone J](zone_name) with the schedule name [Family Dinner](schedule_name) at [12 PM](start_time) with [20](brightness_level)% brightness and [deactivate](light_state_end) at [7 PM](end_time) [every Saturday](rule) tagged as [family](tag) with [medium](priority)
-      - Add a schedule called [Work Shift](schedule_name) for [Zone K](zone_name) lights to [switch on](light_state) at [9 AM](start_time) with [65](brightness_level)% brightness [every Monday](rule) and [turn off](light_state_end) at [3 PM](end_time) tagged as [work](tag) with [low](priority)
-      - Create a schedule named [Morning Lights](schedule_name) for [Zone L](zone_name) to [activate](light_state) at [10 AM](start_time) with [55](brightness_level)% brightness [every Tuesday](rule) and [switch off](light_state_end) at [2 PM](end_time) tagged as [daily](tag) with [medium](priority)
-      - Set [on](light_state) lights in [Zone M](zone_name) with the schedule name [Evening Settle](schedule_name) at [8 AM](start_time) with [45](brightness_level)% brightness and [deactivate](light_state_end) at [9 PM](end_time) [every Wednesday](rule) tagged as [settle](tag) with [low](priority)
-      - Power up the lights of [Zone N](zone_name) with the schedule name [Early Rise](schedule_name) at [6 AM](start_time) with [85](brightness_level)% brightness [every Thursday](rule) and [turn off](light_state_end) at [10 PM](end_time) tagged as [morning](tag) with [high](priority)
-      - Illuminate [Zone O](zone_name) with the schedule name [Friday Fun](schedule_name) with [95](brightness_level)% brightness starting at [4 PM](start_time) [every Friday](rule) and [switch off](light_state_end) at [8 AM](end_time) tagged as [fun](tag) with [medium](priority)
-      - Enable [Zone P](zone_name) lights with the schedule name [Dinner Party](schedule_name) at [7 PM](start_time) with [35](brightness_level)% brightness [every Saturday](rule) and [turn them off](light_state_end) at [11 PM](end_time) tagged as [party](tag) with [low](priority)
-      - Brighten [Zone Q](zone_name) with the schedule name [Holiday Bright](schedule_name) at [3 PM](start_time) on [Holidays](rule) with [10](brightness_level)% brightness and [switch off](light_state_end) at [9 PM](end_time) tagged as [holiday](tag) with [high](priority)
-      - Activate lights in [Zone R](zone_name) with the schedule name [Family Time](schedule_name) with [60](brightness_level)% brightness at [12 PM](start_time) [every Sunday](rule) and [turn them off](light_state_end) at [5 PM](end_time) tagged as [family](tag) with [medium](priority)
-      - Turn [on](light_state) the lights in [Zone S](zone_name) with the schedule name [Early Start](schedule_name) at [5 AM](start_time) with [90](brightness_level)% brightness and [switch off](light_state_end) at [8 AM](end_time) every [Monday](rule) tagged as [early](tag) with [high](priority)
-      - Switch [on](light_state) lights for [Zone T](zone_name) with the schedule name [Afternoon Work](schedule_name) at [1 PM](start_time) with [25](brightness_level)% brightness [every Tuesday](rule) and [turn off](light_state_end) at [3 PM](end_time) tagged as [work](tag) with [medium](priority)
-      - Activate [Zone U](zone_name) lights with the schedule name [Evening Relax](schedule_name) at [4 PM](start_time) with [50](brightness_level)% brightness [every Wednesday](rule) and [switch off](light_state_end) at [10 PM](end_time) tagged as [relax](tag) with [low](priority)
-      - Set [on](light_state) lights in [Zone V](zone_name) with the schedule name [Night Mode](schedule_name) at [2 AM](start_time) with [80](brightness_level)% brightness and [deactivate](light_state_end) at [6 AM](end_time) every [Friday](rule) tagged as [night](tag) with [high](priority)
-      - Power [on](light_state) the lights of [Zone W](zone_name) with the schedule name [Weekend Lights](schedule_name) at [6 PM](start_time) with [70](brightness_level)% brightness [every Saturday](rule) and [turn them off](light_state_end) at [10 PM](end_time) tagged as [weekend](tag) with [medium](priority)
-      - Illuminate [Zone X](zone_name) with the schedule name [Thursday Brightness](schedule_name) with [90](brightness_level)% brightness starting at [3 PM](start_time) [every Thursday](rule) and [switch the lights off](light_state_end) at [12 AM](end_time) tagged as [weekly](tag) with [low](priority)
-      - Enable [Zone Y](zone_name) lights with the schedule name [Monday Morning](schedule_name) at [8 AM](start_time) with [45](brightness_level)% brightness [every Monday](rule) and [turn them off](light_state_end) at [9 PM](end_time) tagged as [daily](tag) with [high](priority)
-      - Brighten [Zone Z](zone_name) with the schedule name [Sunday Evening](schedule_name) at [11 AM](start_time) [every Sunday](rule) with [20](brightness_level)% brightness and [switch off](light_state_end) at [4 PM](end_time) tagged as [family](tag) with [medium](priority)
-      - Create a new schedule named [Work Time](schedule_name) for [Zone AA](zone_name) to [switch on](light_state) at [9 AM](start_time) with [60](brightness_level)% brightness [every Monday](rule) and [deactivate](light_state_end) at [3 PM](end_time) tagged as [work](tag) with [low](priority)
-      - Set up a schedule named [Afternoon Lights](schedule_name) to turn [on](light_state) the lights in [Zone I](zone_name) at [1 PM](start_time) with [75](brightness_level)% brightness and switch them [off](light_state_end) at [10 PM](end_time) until [5/12/2024](end_year)
-      - Create a schedule titled [Sunday Lights](schedule_name) to switch [on](light_state) lights for [Zone J](zone_name) at [12 PM](start_time) with [25](brightness_level)% brightness every [Sunday](rule) and turn them [off](light_state_end) at [3 PM](end_time) until [5/12/2024](end_year)
-      - Add a schedule named [Morning Setup](schedule_name) to set [on](light_state) lights in [Zone K](zone_name) at [7 AM](start_time) with [65](brightness_level)% brightness and switch them [off](light_state_end) at [9 AM](end_time) until [5/12/2024](end_year)
-      - Set up a schedule called [Monday Lights](schedule_name) to power [on](light_state) the lights of [Zone L](zone_name) at [4 PM](start_time) with [50](brightness_level)% brightness every [Monday](rule) and turn them [off](light_state_end) at [10 PM](end_time) until [5/12/2024](end_year)
-      - Create a schedule titled [Friday Lights](schedule_name) to illuminate [Zone M](zone_name) with [90](brightness_level)% brightness starting at [5 PM](start_time) every [Friday](rule) and switch the lights [off](light_state_end) at [8 AM](end_time) until [5/12/2024](end_year)
-      - Add a schedule named [Evening Routine](schedule_name) to enable [Zone N](zone_name) lights at [6 PM](start_time) with [40](brightness_level)% brightness every [Wednesday](rule) and turn them [off](light_state_end) at [11 PM](end_time) until [5/12/2024](end_year)
-      - Set up a schedule titled [Tuesday Lights](schedule_name) to brighten [Zone O](zone_name) with [20](brightness_level)% brightness at [8 PM](start_time) every [Tuesday](rule) and switch the lights [off](light_state_end) at [10 PM](end_time) until [5/12/2024](end_year)
-      - Create a schedule called [Weekend Lighting](schedule_name) to activate [Zone P](zone_name) lights at [9 AM](start_time) with [10](brightness_level)% brightness every [Saturday](rule) and switch them [off](light_state_end) at [2 PM](end_time) until [5/12/2024](end_year)
       - Add a schedule named [Thursday Shutdown](schedule_name) to turn [off](light_state) lights in [Zone Q](zone_name) with [70](brightness_level)% brightness at [3 PM](start_time) every [Thursday](rule) and turn them [on](light_state_end) at [5 PM](end_time) until [5/12/2024](end_year)
       - Set up a schedule titled [Monday Routine](schedule_name) to switch [on](light_state) lights for [Zone R](zone_name) at [10 AM](start_time) with [80](brightness_level)% brightness every [Monday](rule) and turn [off](light_state) at [9 PM](end_time) until [5/12/2024](end_year)
       - Create a schedule named [Daily Shutdown](schedule_name) to set [on](light_state) lights in [Zone S](zone_name) at [12 PM](start_time) with [60](brightness_level)% brightness and switch them [off](light_state_end) at [1 AM](end_time) until [5/12/2024](end_year)
@@ -111,3 +84,102 @@ nlu:
       - hello there
       - hi there
       - hey there
+
+  - intent: affirm
+    examples: |
+      - yes
+      - sure
+      - go ahead
+      - okay
+
+  - intent: deny
+    examples: |
+      - no
+      - don't do it
+      - cancel
+      - never mind
+
+  - intent: brightness_Zone
+    examples: |
+      - set the brightness in [Zone A](zone_name) to [75](brightness_level)%
+      - adjust the brightness of [Zone B](zone_name) to [60](brightness_level)%
+      - change the brightness level in [Zone C](zone_name) to [100](brightness_level)%
+      - set [Zone D](zone_name) brightness to [45](brightness_level)%
+      - make the brightness in [Zone E](zone_name) [30](brightness_level)%
+      - turn the brightness in [Zone F](zone_name) to [95](brightness_level)%
+      - can you adjust [Zone G](zone_name) to [50](brightness_level)% brightness?
+      - I want the brightness in [Zone H](zone_name) at [70](brightness_level)%
+      - dim [Zone I](zone_name) to [20](brightness_level)%
+      - increase brightness in [Zone J](zone_name) to [85](brightness_level)%
+      - set the lights in [Zone K](zone_name) to [40](brightness_level)% brightness
+      - make [Zone L](zone_name) [90](brightness_level)% bright
+      - change the brightness setting for [Zone M](zone_name) to [55](brightness_level)%
+      - reduce brightness in [Zone N](zone_name) to [15](brightness_level)%
+      - brighten [Zone O](zone_name) to [100](brightness_level)%
+      - bring [Zone P](zone_name) to [75](brightness_level)% brightness
+      - set [Zone Q](zone_name) at [65](brightness_level)% brightness level
+      - adjust [Zone R](zone_name) to [80](brightness_level)% brightness
+  
+  - intent: brightness_light
+    examples: |
+      - set the brightness of light [1](light_id) in [Zone A](zone_name) to [75](brightness_level)%
+      - adjust light [2](light_id) brightness in [Zone B](zone_name) to [60](brightness_level)%
+      - change brightness of light [3](light_id) in [Zone C](zone_name) to [100](brightness_level)%
+      - make light [4](light_id) in [Zone D](zone_name) brightness [45](brightness_level)%
+      - turn on light [5](light_id) in [Zone E](zone_name) to [30](brightness_level)%
+      - set the brightness of light[6](light_id) in [Zone F](zone_name) to [95](brightness_level)%
+      - dim light [7](light_id) in [Zone G](zone_name) to [50](brightness_level)%
+      - I want to set light [8](light_id) brightness in [Zone H](zone_name) to [70](brightness_level)%
+      - brighten light[9](light_id) in [Zone I](zone_name) to [20](brightness_level)%
+
+  - intent: brightness_fallback
+    examples: |
+      - brightness
+      - brightness of light
+      - change brightness
+      - set brightness
+      - brightness level
+      - update brightness
+  
+  - intent: list_zone
+    examples: |
+      - list the available zones
+      - show me the available Zones
+      - what zones are available?
+      - can you list the zones?
+      - display the list of Zones
+      - show all Zones
+      - tell me the zone
+      - provide a list of zone
+      - give me the available zones
+      - which zones are available?
+      - can I see the list of zone?
+      - what are the current Zones?
+      - show available zones
+      - list out all the zones
+      - could you list the zone?
+      - which zones do we have?
+      - do you have a list of zones?
+      - show me zone I can access
+
+
+
+  - intent: other_fallback
+    examples: |
+      - Zone A
+      - zone
+      - a
+      - AA
+      - A
+      - B
+      - Zone C
+      - 3
+      - 6
+      - 7
+      - Zone Z 90
+      - zone z 9
+      - zone
+      - 90
+      - 89
+
+
