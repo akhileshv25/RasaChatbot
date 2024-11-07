@@ -51,7 +51,7 @@ nlu:
       - deactivate [Zone A](zone_name) lighting
       - power off the lights in [Zone A](zone_name)
       - turn off the lights of [Zone A](zone_name)
-    
+
   - intent: manage_schedules
     examples: |
       - Create a schedule named [Evening Lights](schedule_name) for [Zone B](zone_name) to [turn off](light_state) lights with [50](brightness_level)% brightness at [7 PM](start_time) [every Saturday](rule) and [turn them on](light_state_end) at [9 PM](end_time) with the tag [weekly](tag) and [high](priority)
@@ -69,8 +69,6 @@ nlu:
       - Create a schedule titled [Tuesday Schedule](schedule_name) to enable [Zone V](zone_name) lights at [2 PM](start_time) with [40](brightness_level)% brightness every [Tuesday](rule) and turn them [off](light_state_end) at [3 PM](end_time) until [5/12/2024](end_year)
       - Add a schedule called [Sunday Setup](schedule_name) to brighten [Zone W](zone_name) with [20](brightness_level)% brightness at [11 AM](start_time) every [Sunday](rule) and switch the lights [off](light_state_end) at [4 PM](end_time) until [5/12/2024](end_year)
       - Set up a schedule named [Monday Activation](schedule_name) to activate lights in [Zone X](zone_name) with [30](brightness_level)% brightness at [8 AM](start_time) every [Monday](rule) and turn them [off](light_state_end) at [5 PM](end_time) until [5/12/2024](end_year)
-
-
 
   - intent: greet
     examples: |
@@ -119,7 +117,7 @@ nlu:
       - bring [Zone P](zone_name) to [75](brightness_level)% brightness
       - set [Zone Q](zone_name) at [65](brightness_level)% brightness level
       - adjust [Zone R](zone_name) to [80](brightness_level)% brightness
-  
+
   - intent: brightness_light
     examples: |
       - set the brightness of light [1](light_id) in [Zone A](zone_name) to [75](brightness_level)%
@@ -140,7 +138,7 @@ nlu:
       - set brightness
       - brightness level
       - update brightness
-  
+
   - intent: list_zone
     examples: |
       - list the available zones
@@ -185,7 +183,38 @@ nlu:
       - display all lights in [Zone S](zone_name)
       - list lights for [Zone T](zone_name)
 
+  - intent: check_light_status
+    examples: |
+      - What is the status of light [5](light_id)?
+      - Tell me the status of light [7](light_id)
+      - How is light [2](light_id) doing?
+      - Can you check light [8](light_id)?
+      - Status of light [1](light_id) please
+      - Is light [4](light_id) on or off?
+      - Give me the status of light [6](light_id)
+      - Show the condition of light [9](light_id)
+      - Check the light [10](light_id) status for me
+      - What condition is light [12](light_id) in?
+      - Is light [13](light_id) operational?
+      - Light [15](light_id), check status
+      - Find the status of light [14](light_id)
 
+  - intent: check_zone_status
+    examples: |
+      - What is the status of [Zone C](zone_name)?
+      - Tell me the status of [Zone D](zone_name)
+      - Show me the status of [Zone E](zone_name)
+      - Can you check the status of [Zone F](zone_name)?
+      - Give me the status of [Zone G](zone_name)
+      - I want to know the status of [Zone H](zone_name)
+      - Check the status of [Zone I](zone_name)
+      - Status of [Zone J](zone_name), please
+      - What's going on in [Zone K](zone_name)?
+      - Current status of [Zone L](zone_name)
+      - Provide the status of [Zone M](zone_name)
+      - How is [Zone N](zone_name) doing?
+      - [Zone O](zone_name) status
+      - Could you tell me the status of [Zone P](zone_name)?
 
   - intent: other_fallback
     examples: |
@@ -204,5 +233,7 @@ nlu:
       - zone
       - 90
       - 89
-
-
+      - status
+      - what
+      - is 
+      - light

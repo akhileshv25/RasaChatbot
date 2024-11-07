@@ -1,82 +1,95 @@
 version: "3.1"
 
 stories:
+  - story: Turn on the light story
+    steps:
+      - intent: turn_on_light
+      - slot_was_set:
+          - light_id: ""
+      - action: action_turn_on_light
 
-- story: Turn on the light story
-  steps:
-  - intent: turn_on_light
-  - slot_was_set:
-    - light_id: ""  
-  - action: action_turn_on_light
+  - story: Turn off the light story
+    steps:
+      - intent: turn_off_light
+      - slot_was_set:
+          - light_id: ""
+      - action: action_turn_off_light
 
-- story: Turn off the light story
-  steps:
-  - intent: turn_off_light
-  - slot_was_set:
-    - light_id: ""   
-  - action: action_turn_off_light
+  - story: Turn on Zone light story
+    steps:
+      - intent: zone_on_lights
+      - slot_was_set:
+          - light_id: ""
+      - action: action_zone_on_lights
 
-- story: Turn on Zone light story
-  steps:
-  - intent: zone_on_lights
-  - slot_was_set:
-    - light_id: ""
-  - action: action_zone_on_lights
+  - story: Turn off Zone light story
+    steps:
+      - intent: zone_off_lights
+      - slot_was_set:
+          - light_id: ""
+      - action: action_zone_off_lights
 
-- story: Turn off Zone light story
-  steps:
-  - intent: zone_off_lights
-  - slot_was_set:
-    - light_id: ""
-  - action: action_zone_off_lights
+  - story: schedules for the zone story
+    steps:
+      - intent: schedules
+      - slot_was_set:
+          - zone_name: null
+          - light_state: null
+          - light_state_end: null
+          - brightness_level: null
+          - start_time: null
+          - end_time: null
+          - rule: null
+          - end_year: null
+          - schedule_name: null
+          - tag: null
+          - priority: null
+      - action: action_schedules
+      - action: utter_schedules
+  - story: chage brightness rule of the Zone Story
+    steps:
+      - intent: brightness_Zone
+      - slot_was_set:
+          - zone_name: "Zone A"
+          - brightness_level: 75
+      - action: action_brightness
 
-- story: schedules for the zone story
-  steps:
-  - intent: schedules
-  - slot_was_set:
-    - zone_name: null
-    - light_state: null
-    - light_state_end: null
-    - brightness_level: null
-    - start_time: null
-    - end_time: null
-    - rule: null
-    - end_year: null
-    - schedule_name: null
-    - tag: null
-    - priority: null
-  - action: action_schedules
-  - action: utter_schedules
-- story: chage brightness rule of the Zone Story
-  steps:
-    - intent: brightness_Zone
-    - slot_was_set:
-      - zone_name: "Zone A"
-      - brightness_level: 75
-    - action: action_brightness
+  - story: update brightness rule of the Zone for specific light
+    steps:
+      - intent: brightness_light
+      - slot_was_set:
+          - light_id: "3"
+          - zone_name: "Zone A"
+          - brightness_level: 75
+      - action: action_brightness_light
 
-- story: update brightness rule of the Zone for specific light
-  steps:
-    - intent: brightness_light
-    - slot_was_set:
-      - light_id: "3"
-      - zone_name: "Zone A"
-      - brightness_level: 75
-    - action: action_brightness_light
+  - story: brightness fallback
+    steps:
+      - intent: brightness_fallback
+      - action: utter_brightness_fallback
 
-- story: brightness fallback 
-  steps: 
-    - intent: brightness_fallback
-    - action: utter_brightness_fallback
-  
-- story: list all the zone
-  steps:
-    - intent: list_zone
-    - action: action_list_zone
+  - story: list all the zone
+    steps:
+      - intent: list_zone
+      - action: action_list_zone
 
-- story: list all the light in zone
-  steps:
-    - intent: list_Zone_light
-    - slot_was_set:
-      - zone_name: "Zone B"
-    - action: action_list_zone_light
+  - story: list all the light in zone
+    steps:
+      - intent: list_Zone_light
+      - slot_was_set:
+          - zone_name: "Zone B"
+      - action: action_list_zone_light
+
+  - story: check all the status of light
+    steps:
+      - intent: check_light_status
+      - slot_was_set:
+          - light_id: null
+      - action: action_check_light_status
+
+  - story: check status for zone
+    steps:
+      - intent: check_zone_status
+      - slot_was_set:
+          - zone_name: "Zone C"
+      - action: action_check_zone_status

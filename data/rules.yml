@@ -17,14 +17,14 @@ rules:
       - action: utter_ask_light_id
       - action: action_turn_off_light
 
-  - rule: Activate lights on the zone  
+  - rule: Activate lights on the zone
     steps:
       - intent: zone_on_lights
       - slot_was_set:
           - zone_name: null
       - action: action_zone_on_lights
 
-  - rule: Activate lights off the zone  
+  - rule: Activate lights off the zone
     steps:
       - intent: zone_off_lights
       - slot_was_set:
@@ -51,24 +51,24 @@ rules:
     steps:
       - intent: brightness_Zone
       - slot_was_set:
-        - zone_name: null
-        - brightness_level: null
+          - zone_name: null
+          - brightness_level: null
       - action: action_brightness
 
   - rule: update brightness rule for the zone light
     steps:
       - intent: brightness_light
       - slot_was_set:
-        - zone_name: null
-        - brightness_level: null
-        - light_id: null
+          - zone_name: null
+          - brightness_level: null
+          - light_id: null
       - action: action_brightness_light
 
   - rule: list all the light in zone
     steps:
       - intent: list_Zone_light
       - slot_was_set:
-        - zone_name: null
+          - zone_name: null
       - action: action_list_zone_light
 
   - rule: Greet user
@@ -78,20 +78,32 @@ rules:
 
   - rule: Ask the user to rephrase whenever they send a message with low NLU confidence
     steps:
-    - intent: nlu_fallback
-    - action: utter_please_rephrase
-  
-  - rule: brightness fallback 
-    steps: 
+      - intent: nlu_fallback
+      - action: utter_please_rephrase
+
+  - rule: brightness fallback
+    steps:
       - intent: brightness_fallback
       - action: utter_brightness_fallback
-  
+
   - rule: other fallback
     steps:
-    - intent: other_fallback
-    - action: utter_please_rephrase
-  
+      - intent: other_fallback
+      - action: utter_please_rephrase
+
   - rule: list all the zone
     steps:
       - intent: list_zone
       - action: action_list_zone
+  - rule: check status of the light
+    steps:
+      - intent: check_light_status
+      - slot_was_set:
+          - light_id: null
+      - action: action_check_light_status
+  - rule: check status for zone
+    steps:
+      - intent: check_zone_status
+      - slot_was_set:
+          - zone_name: null
+      - action: action_check_zone_status
