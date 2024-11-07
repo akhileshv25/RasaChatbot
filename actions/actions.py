@@ -4,6 +4,8 @@ from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.events import SlotSet
 from datetime import datetime, timedelta
 from cron import text_to_cron
+from rasa_sdk.events import EventType
+from typing import List, Dict, Text, Any
 
 class ActionTurnOnLight(Action):
 
@@ -506,12 +508,6 @@ class ActionLightBrightness(Action):
         return [SlotSet("zone_name", None), SlotSet("brightness_level", None),SlotSet("light_id",None)]
     
 
-import requests
-from rasa_sdk import Action
-from rasa_sdk.executor import CollectingDispatcher
-from rasa_sdk.events import EventType
-from typing import List, Dict, Text, Any
-
 class ActionListZone(Action):
 
     def name(self) -> str:
@@ -536,6 +532,46 @@ class ActionListZone(Action):
 
                     dispatcher.utter_message(
                         text=f"Here are the available zones:\n{zone_table}"
+                    )
+                else:
+                    dispatcher.utter_message(
+                        text="Error: Zone data is not in the expected format."
+                    )
+            else:
+                dispatcher.utter_message(text="Failed to fetch the list of zones.")
+
+        except requests.exceptions.ConnectionError:
+            dispatcher.utter_message(text="Error: Unable to connect to the zone list API.")
+        except Exception as e:
+            dispatcher.utter_message(text=f"An unexpected error occurred: {str(e)}")
+
+        return []
+
+class ActionListZoneLights(Action):
+
+    def name(self) -> str:
+        return "action_list_zone_light"
+
+    def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]) -> List[EventType]:
+        zone_name = tracker.get_slot("zone_name")
+        list_all_zones_url = f"http://localhost:8080/api/lights/zone/light/{zone_name}"
+
+        try:
+            response = requests.get(list_all_zones_url)
+
+            if response.status_code == 200:
+                zones = response.json()
+
+                if isinstance(zones, list):
+                    table_header = "Light Id | Lightstate | Brightness\n" + "-"*30
+                    table_rows = [
+                        f" {zone.get('lightid', 'Unnamed lightid')} | {zone.get('lightstate', 'Unnamed lightstate')} | {zone.get('lightlevel', 'No lightlevel')}"
+                        for zone in zones
+                    ]
+                    zone_table = table_header + "\n" + "\n".join(table_rows)
+
+                    dispatcher.utter_message(
+                        text=f"Here are the available {zone_name}:\n{zone_table}"
                     )
                 else:
                     dispatcher.utter_message(

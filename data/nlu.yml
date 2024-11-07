@@ -162,6 +162,29 @@ nlu:
       - do you have a list of zones?
       - show me zone I can access
 
+  - intent: list_Zone_light
+    examples: |
+      - list the lights in [Zone A](zone_name)
+      - show me the lights in [Zone B](zone_name)
+      - what lights are in [Zone C](zone_name)?
+      - can you list the lights in [Zone D](zone_name)?
+      - display the lights in [Zone E](zone_name)
+      - show all lights in [Zone F](zone_name)
+      - tell me the lights in [Zone G](zone_name)
+      - give me the lights in [Zone H](zone_name)
+      - provide a list of lights in [Zone I](zone_name)
+      - which lights are in [Zone J](zone_name)?
+      - what lights are available in [Zone K](zone_name)?
+      - list out the lights in [Zone L](zone_name)
+      - can I see the lights in [Zone M](zone_name)?
+      - show me available lights in [Zone N](zone_name)
+      - are there lights in [Zone O](zone_name)?
+      - show me the list of lights in [Zone P](zone_name)
+      - could you list the lights in [Zone Q](zone_name)?
+      - what are the lights in [Zone R](zone_name)?
+      - display all lights in [Zone S](zone_name)
+      - list lights for [Zone T](zone_name)
+
 
 
   - intent: other_fallback

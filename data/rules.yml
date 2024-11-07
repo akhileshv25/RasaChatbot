@@ -64,6 +64,13 @@ rules:
         - light_id: null
       - action: action_brightness_light
 
+  - rule: list all the light in zone
+    steps:
+      - intent: list_Zone_light
+      - slot_was_set:
+        - zone_name: null
+      - action: action_list_zone_light
+
   - rule: Greet user
     steps:
       - intent: greet

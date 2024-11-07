@@ -14,6 +14,7 @@ intents:
   - other_fallback
   - brightness_fallback
   - list_zone
+  - list_Zone_light
 
 entities:
   - light_id
@@ -122,6 +123,7 @@ actions:
   - action_brightness
   - action_brightness_light
   - action_list_zone
+  - action_list_zone_light
 
 responses:
   utter_brightness_fallback:
