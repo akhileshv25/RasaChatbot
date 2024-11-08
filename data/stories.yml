@@ -93,3 +93,39 @@ stories:
       - slot_was_set:
           - zone_name: "Zone C"
       - action: action_check_zone_status
+
+
+  - story: Schedule Light
+    steps:
+    - intent: request_schedule
+    - action: action_schedule_light
+    - intent: inform_zone_name
+    - slot_was_set:
+        - zone_name: "Zone A"
+    - action: action_schedule_light
+    - intent: inform_light_state
+    - slot_was_set:
+        - light_state: "on"
+    - action: action_schedule_light
+    - intent: inform_brightness_level
+    - slot_was_set:
+        - brightness_level: 79
+    - action: action_schedule_light
+    - intent: inform_rule
+    - slot_was_set:
+        - rule: "6 pm every Sunday"
+    - action: action_schedule_light
+    - intent: inform_end_time
+    - slot_was_set:
+        - end_time: "9 pm"
+    - action: action_schedule_light
+    - intent: inform_schedule_name
+    - slot_was_set:
+        - schedule_name: "Evening lights"
+    - action: action_schedule_light
+    - intent: inform_priority
+    - slot_was_set:
+        - priority: 2
+    - action: action_schedule_light
+    - intent: affirm
+    - action: action_confirm_schedule

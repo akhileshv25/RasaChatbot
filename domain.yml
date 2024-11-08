@@ -17,6 +17,14 @@ intents:
   - list_Zone_light
   - check_light_status
   - check_zone_status
+  - request_schedule         
+  - inform_zone_name        
+  - inform_light_state      
+  - inform_brightness_level 
+  - inform_rule              
+  - inform_end_time          
+  - inform_schedule_name     
+  - inform_priority
 
 entities:
   - light_id
@@ -31,6 +39,7 @@ entities:
   - schedule_name
   - tag
   - priority
+  - confirmation
 
 slots:
   light_id:
@@ -113,6 +122,13 @@ slots:
     mappings:
       - type: from_entity
         entity: priority
+  confirmation:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: confirmation
+
 
 actions:
   - action_turn_on_light
@@ -126,6 +142,8 @@ actions:
   - action_list_zone_light
   - action_check_light_status
   - action_check_zone_status
+  - action_schedule_light
+  - action_confirm_schedule
 
 responses:
   utter_brightness_fallback:

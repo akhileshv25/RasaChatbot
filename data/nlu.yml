@@ -85,14 +85,15 @@ nlu:
 
   - intent: affirm
     examples: |
-      - yes
+      - [yes](confirmation)
+      - [no]((confirmation))
       - sure
       - go ahead
       - okay
 
   - intent: deny
     examples: |
-      - no
+      - [no](confirmation)
       - don't do it
       - cancel
       - never mind
@@ -218,22 +219,108 @@ nlu:
 
   - intent: other_fallback
     examples: |
-      - Zone A
+      - Zone
       - zone
-      - a
-      - AA
-      - A
-      - B
-      - Zone C
-      - 3
-      - 6
-      - 7
-      - Zone Z 90
-      - zone z 9
+      - Zone Z 
+      - zone z 
       - zone
-      - 90
-      - 89
       - status
       - what
       - is 
       - light
+      - on
+      - off
+
+
+  - intent: request_schedule
+    examples: |
+      - I want to schedule a light
+      - I need to set up a light schedule
+      - Can you schedule the lights?
+      - Schedule the light for me
+      - Set up a lighting schedule
+      - I want to create a light schedule
+
+  - intent: inform_zone_name
+    examples: |
+      - in [Zone A](zone_name)
+      - for [Zone B](zone_name)
+      - [Zone C] (zone_name)
+      - Set it for [Zone D](zone_name)
+      - Schedule in [Zone A](zone_name)
+      - Light for [Zone B](zone_name)
+      - [Zone C](zone_name)
+
+  - intent: inform_light_state
+    examples: |
+      - Switch [on] (light_state)
+      - Turn [ON](light_state)
+      - Turn it [on](light_state)
+      - Set it to [off](light_state)
+      - Make it [on](light_state)
+      - It should be [on](light_state)
+      - I want it [off](light_state)
+      - [On](light_state)
+      - [Off](light_state)
+
+  - intent: inform_brightness_level
+    examples: |
+      - [90]%(brightness_level)
+      - [80]%(brightness_level)
+      - [90](brightness_level)
+      - [55] (brightness_level)
+      - Set it [79]%(brightness_level)
+      - set it [55]%(brightness_level)
+      - set It [66](brightness_level)
+      - set[87]%(brightness_level)
+      - Make it [85]%(brightness_level)
+      - make it [90](brightness_level)
+      - make it [90](brightness_level)
+      - Set level to [50]%(brightness_level)
+      - I want it at [100]%(brightness_level)
+      - Level [45]%(brightness_level)
+      - level [99]%(brightness_level)
+      - Brightness of [20]%(brightness_level)
+      - Set to [30]%(brightness_level)
+
+  - intent: inform_end_time
+    examples: |
+      - End by [9 pm](end_time)
+      - Stop at [10 pm](end_time)
+      - It should end by [11 pm](end_time)
+      - Finish at [6 pm](end_time)
+      - Set to stop at [9 am](end_time)
+      - Ends by [8 pm](end_time)
+
+  - intent: inform_rule
+    examples: |
+      - [6 pm every Sunday](rule)
+      - [7 pm daily](rule)
+      - Recurrence rule is [6 pm every Sunday](rule)
+      - Schedule it [7 pm daily](rule)
+      - Repeat [12 am pevery Monday](rule)
+      - Set for [5 pm every Friday](rule)
+      - Occurs [4 pm every day](rule)
+      - Repeat [3 am on weekends](rule)
+
+
+  - intent: inform_schedule_name
+    examples: |
+      - [evening lights](schedule_name)
+      - [aki light](schedule_name)
+      - [noon light](schedule_name)
+      - Call it [Evening lights](schedule_name)
+      - Name it [Morning brightness](schedule_name)
+      - The name should be [Office Schedule](schedule_name)
+      - Label it as [Evening lights](schedule_name)
+      - Use the name [Night light](schedule_name)
+      - Let's call it [Weekend glow](schedule_name)
+
+  - intent: inform_priority
+    examples: |
+      - Set to [1](priority)
+      - Make it [2](priority)
+      - make it [2](priority)
+      - Priority is [3](priority)
+      - With [4](priority)
+      - I want the priority at [5](priority)
