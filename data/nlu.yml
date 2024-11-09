@@ -231,7 +231,6 @@ nlu:
       - on
       - off
 
-
   - intent: request_schedule
     examples: |
       - I want to schedule a light
@@ -253,6 +252,8 @@ nlu:
 
   - intent: inform_light_state
     examples: |
+      - [on](light_state)
+      - [off](light_state)
       - Switch [on] (light_state)
       - Turn [ON](light_state)
       - Turn it [on](light_state)
@@ -268,7 +269,7 @@ nlu:
       - [90]%(brightness_level)
       - [80]%(brightness_level)
       - [90](brightness_level)
-      - [55] (brightness_level)
+      - [55](brightness_level)
       - Set it [79]%(brightness_level)
       - set it [55]%(brightness_level)
       - set It [66](brightness_level)
@@ -285,6 +286,9 @@ nlu:
 
   - intent: inform_end_time
     examples: |
+      - [9 pm](end_time)
+      - [11 pm](end_time)
+      - [12 am](end_time)
       - End by [9 pm](end_time)
       - Stop at [10 pm](end_time)
       - It should end by [11 pm](end_time)
@@ -300,9 +304,8 @@ nlu:
       - Schedule it [7 pm daily](rule)
       - Repeat [12 am pevery Monday](rule)
       - Set for [5 pm every Friday](rule)
-      - Occurs [4 pm every day](rule)
-      - Repeat [3 am on weekends](rule)
-
+      - [4 pm every day](rule)
+      - [3 am on weekends](rule)
 
   - intent: inform_schedule_name
     examples: |
@@ -318,9 +321,13 @@ nlu:
 
   - intent: inform_priority
     examples: |
-      - Set to [1](priority)
-      - Make it [2](priority)
-      - make it [2](priority)
-      - Priority is [3](priority)
-      - With [4](priority)
-      - I want the priority at [5](priority)
+      - [low](priority)
+      - [high](priority)
+      - [medium](priority)
+      - [high](priority)
+      - Set to [low](priority)
+      - Make it [low](priority)
+      - make it [high](priority)
+      - Priority is [medium](priority)
+      - With [high](priority)
+      - I want the priority at [low](priority)

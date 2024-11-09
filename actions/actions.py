@@ -1,3 +1,4 @@
+from typing import Any, Dict, Text
 from rasa_sdk import Action
 from typing import Any, Dict, List, Text
 import requests
@@ -9,6 +10,7 @@ from cron import text_to_cron
 from rasa_sdk.events import EventType
 from typing import List, Dict, Text, Any
 import ast
+from rasa_sdk import Tracker, FormValidationAction
 
 
 class ActionTurnOnLight(Action):
@@ -714,11 +716,10 @@ class ActionZoneLightStatus(Action):
 
                         light_state = zonelightstatus[0] if zonelightstatus else "N/A"
                         brightness = zonelightbrightness[0] if zonelightbrightness else "N/A"
-                        
+
                         response_text += f"Light State: {light_state}, \nBrightness: {brightness}\n"
 
                         dispatcher.utter_message(text=response_text)
-
 
                     else:
                         dispatcher.utter_message(
@@ -746,156 +747,71 @@ class ActionZoneLightStatus(Action):
         return [SlotSet("zone_name", None)]
 
 
-
-
 class ActionScheduleLight(Action):
-
     def name(self) -> Text:
         return "action_schedule_light"
 
     def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-        if not tracker.get_slot("zone_name"):
-            dispatcher.utter_message(text="For which zone would you like to schedule the light? (e.g)., For Zone A")
-            return []
-
-        if not tracker.get_slot("light_state"):
-            dispatcher.utter_message(text="What should be the light state (on/off)? (e.g., Turn ON)")
-            return []
-
-        if not tracker.get_slot("brightness_level"):
-            dispatcher.utter_message(text="What should be the light level (0-100)? (e.g., 90%)")
-            return []
-
-        if not tracker.get_slot("rule"):
-            dispatcher.utter_message(text="Please specify the recurrence rule (e.g., 6 pm every Sunday).")
-            return []
-
-        if not tracker.get_slot("end_time"):
-            dispatcher.utter_message(text="When should this schedule end? (e.g., End by 6 am)")
-            return []
-
-        if not tracker.get_slot("schedule_name"):
-            dispatcher.utter_message(text="Please provide a name for this schedule.(e.g., Evening Lights)")
-            return []
-
-        if not tracker.get_slot("priority"):
-            dispatcher.utter_message(text="Please specify the priority level for this schedule.(e.g., Make it 1)")
-            return []
-
         zone_name = tracker.get_slot("zone_name")
         light_state = tracker.get_slot("light_state")
-        light_level = tracker.get_slot("brightness_level")
-        recurrence_rule = tracker.get_slot("rule")
+        brightness_level = tracker.get_slot("brightness_level")
+        rule = tracker.get_slot("rule")
         end_time = tracker.get_slot("end_time")
         schedule_name = tracker.get_slot("schedule_name")
-        schedule_priority = tracker.get_slot("priority")
+        priority = tracker.get_slot("priority")
 
-        confirmation_message = (
-            f"Please confirm the following details:\n"
-            f"- Zone: {zone_name}\n"
-            f"- Light State: {light_state}\n"
-            f"- Light Level: {light_level}\n"
-            f"- Recurrence Rule: {recurrence_rule}\n"
-            f"- End Time: {end_time}\n"
-            f"- Schedule Name: {schedule_name}\n"
-            f"- Schedule Priority: {schedule_priority}\n\n"
-            "Do you confirm this schedule?"
-        )
-        
+        # Create a message with all the details to confirm
+        confirmation_message = (f"Scheduled light for zone '{zone_name}' with the following settings:\n"
+                                f"State: {light_state}, Brightness: {brightness_level},\n"
+                                f"Rule: {rule}, End Time: {end_time},\n"
+                                f"Schedule Name: {schedule_name}, Priority: {priority}")
+
         dispatcher.utter_message(text=confirmation_message)
-        return [SlotSet("confirmation", None)]  
+        return []
 
-class ActionConfirmSchedule(Action):
 
+class ValidateScheduleLightForm(FormValidationAction):
     def name(self) -> Text:
-        return "action_confirm_schedule"
+        return "validate_schedule_light_form"
 
-    def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-        confirmation = tracker.get_slot("confirmation")
-        zone_name = tracker.get_slot("zone_name")
-        light_state = tracker.get_slot("light_state")
-        light_level = tracker.get_slot("brightness_level")
-        recurrence_rule = tracker.get_slot("rule")
-        end_time = tracker.get_slot("end_time")
-        schedule_name = tracker.get_slot("schedule_name")
-        schedule_priority = tracker.get_slot("priority")
+    async def validate_light_state(
+        self,
+        slot_value: Any,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any]
+    ) -> Dict[Text, Any]:
+        """Validate the light state to ensure it's either 'on' or 'off'."""
 
-        if light_state == "ON" or light_state == "on" or light_state == "On" or light_state == "oN":
-            light_state = "ON"
-        if light_state == "OFF" or light_state == "off" or light_state == "OFf" or light_state == "oFF" or light_state=="Off":
-            light_state = "OFF"
-        
-        if confirmation == "yes":
-            
-            zoneidbyname = f"http://localhost:8080/api/zones/byName/{zone_name}"
+        # Convert slot_value to lowercase for consistency
+        light_state = slot_value.strip().lower()
 
-            try:
-                status_response = requests.get(zoneidbyname)
+        if light_state in ["on", "off", "ON", "OFF", "On", "oFF", "Off"]:
+            return {"light_state": light_state}
+        else:
+            dispatcher.utter_message(
+                text="Please specify a valid light state: 'on' or 'off'.")
+            return {"light_state": None}
 
-                if status_response.status_code == 200:
-                    zoneId_response = status_response.json()
-                    print(zoneId_response)
+    async def validate_brightness_level(
+        self,
+        slot_value: Any,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any]
+    ) -> Dict[Text, Any]:
+        """Validate the brightness level to ensure it's between 0 and 100."""
 
-                    if isinstance(zoneId_response, dict):
-                        zoneId = zoneId_response.get("zoneid")
-                        if zoneId is None:
-                            dispatcher.utter_message(
-                                text="Error: Zone ID not found in the response.")
-                            return []
-                    elif isinstance(zoneId_response, int):
-                        zoneId = zoneId_response
-                    else:
-                        dispatcher.utter_message(
-                            text="Error: Unexpected response format.")
-                        return []
+        try:
+            brightness = int(slot_value)
+        except ValueError:
+            dispatcher.utter_message(
+                text="Please enter a valid brightness level as a number between 0 and 100.")
+            return {"brightness_level": None}
 
-                else:
-                    dispatcher.utter_message(
-                        text=f"Error: Received unexpected status code {status_response.status_code}.")
-
-            except requests.exceptions.ConnectionError:
-                dispatcher.utter_message(
-                    text="Error: Unable to connect to the zone list API.")
-            except Exception as e:
-                dispatcher.utter_message(
-                    text=f"An unexpected error occurred: {str(e)}")
-                return []
-
-            schedule_payload = {
-                "priority": schedule_priority,
-                "lightstate": light_state,
-                "lightlevel": light_level,
-                "starttime": light_level,
-                "endtime": light_level,
-                "recurrenceRule": recurrence_rule,
-                "startdate": light_level,
-                "enddate": light_level,
-                "schedulename": schedule_name,
-                "zone": {
-                    "zoneid": zoneId
-                }
-            }
-
-            change_state_url = "http://localhost:8080/api/schedules/save"
-
-            try:
-                change_response = requests.post(
-                    change_state_url, json=schedule_payload)
-
-                if change_response.status_code == 200:
-                    dispatcher.utter_message(text="Schedule added successfully!")
-                elif change_response.status_code == 208:
-                    dispatcher.utter_message(text="Schedules already exist.")
-                else:
-                    dispatcher.utter_message(text="Failed to save schedules.")
-
-            except requests.exceptions.ConnectionError:
-                dispatcher.utter_message(
-                    text="Error: Unable to connect to the schedules control API.")
-            except Exception as e:
-                dispatcher.utter_message(
-                    text=f"An unexpected error occurred 222: {str(e)}")
-        if confirmation == "no":
-            dispatcher.utter_message(text="Schedule creation canceled.")
-        
-        return [SlotSet(slot, None) for slot in ["zone_name", "light_state", "brightness_level", "rule", "end_time", "schedule_name", "priority", "confirmation"]]
+        if 0 <= brightness <= 100:
+            return {"brightness_level": brightness}
+        else:
+            dispatcher.utter_message(
+                text="Brightness level must be between 0 and 100.")
+            return {"brightness_level": None}

@@ -107,3 +107,17 @@ rules:
       - slot_was_set:
           - zone_name: null
       - action: action_check_zone_status
+
+  - rule: Activate schedule light form
+    steps:
+      - intent: request_schedule
+      - action: schedule_light_form
+      - active_loop: schedule_light_form
+
+  - rule: Submit schedule light form
+    condition:
+      - active_loop: schedule_light_form
+    steps:
+      - action: schedule_light_form
+      - active_loop: null
+      - action: action_schedule_light

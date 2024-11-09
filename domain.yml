@@ -17,13 +17,13 @@ intents:
   - list_Zone_light
   - check_light_status
   - check_zone_status
-  - request_schedule         
-  - inform_zone_name        
-  - inform_light_state      
-  - inform_brightness_level 
-  - inform_rule              
-  - inform_end_time          
-  - inform_schedule_name     
+  - request_schedule
+  - inform_zone_name
+  - inform_light_state
+  - inform_brightness_level
+  - inform_rule
+  - inform_end_time
+  - inform_schedule_name
   - inform_priority
 
 entities:
@@ -129,6 +129,16 @@ slots:
       - type: from_entity
         entity: confirmation
 
+forms:
+  schedule_light_form:
+    required_slots:
+      - zone_name
+      - light_state
+      - brightness_level
+      - rule
+      - end_time
+      - schedule_name
+      - priority
 
 actions:
   - action_turn_on_light
@@ -143,9 +153,23 @@ actions:
   - action_check_light_status
   - action_check_zone_status
   - action_schedule_light
-  - action_confirm_schedule
+  - validate_schedule_light_form
 
 responses:
+  utter_ask_zone_name:
+    - text: "For which zone would you like to schedule the light? (e.g., Zone A)"
+  utter_ask_light_state:
+    - text: "What should be the light state (on/off)? (e.g., Turn ON)"
+  utter_ask_brightness_level:
+    - text: "What should be the brightness level (0-100)? (e.g., 90%)"
+  utter_ask_rule:
+    - text: "Please specify the recurrence rule (e.g., 6 pm every Sunday)."
+  utter_ask_end_time:
+    - text: "When should this schedule end? (e.g., End by 6 am)"
+  utter_ask_schedule_name:
+    - text: "Please provide a name for this schedule (e.g., Evening Lights)."
+  utter_ask_priority:
+    - text: "Please specify the priority level for this schedule (e.g., Make it 1)."
   utter_brightness_fallback:
     - text: "Sorry I didn't get that. Can you specify the Zone name properly?"
   utter_please_rephrase:
