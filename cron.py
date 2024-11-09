@@ -78,7 +78,8 @@ text_samples = [
     "every Friday at noon",
     "on Thursday at midnight",
     "At 12:00 AM, on day 1 of the month",
-    "At 12:00 AM, only on Friday"
+    "At 12:00 AM, only on Friday",
+    "6 pm every Sunday"
 ]
 
 for text in text_samples:

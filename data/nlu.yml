@@ -83,9 +83,18 @@ nlu:
       - hi there
       - hey there
 
-  - intent: affirm
+  - intent: inform_confirmation
     examples: |
       - [yes](confirmation)
+      - [y](confirmation)
+      - [Y](confirmation)
+      - [YES](confirmation)
+      - [Yes](confirmation)
+      - [Y](confirmation)
+      - [NO]confirmation
+      - [n](confirmation)
+      - [N](confirmation)
+      - [No](confirmation)
       - [no]((confirmation))
       - sure
       - go ahead
@@ -255,7 +264,11 @@ nlu:
       - [on](light_state)
       - [off](light_state)
       - Switch [on] (light_state)
-      - Turn [ON](light_state)
+      - Turn [on](light_state)
+      - [ON](light_state)
+      - [OFF](light_state)
+      - [On](light_state)
+      - [Off](light_state)
       - Turn it [on](light_state)
       - Set it to [off](light_state)
       - Make it [on](light_state)
@@ -289,35 +302,139 @@ nlu:
       - [9 pm](end_time)
       - [11 pm](end_time)
       - [12 am](end_time)
-      - End by [9 pm](end_time)
-      - Stop at [10 pm](end_time)
-      - It should end by [11 pm](end_time)
-      - Finish at [6 pm](end_time)
-      - Set to stop at [9 am](end_time)
-      - Ends by [8 pm](end_time)
+      - [9 AM](end_time)
+      - [12 AM](end_time)
+      - [6 PM](end_time)
+      - [14:00](end_time)
+      - [15:30](end_time)
+      - [17:45](end_time)
+      - [20:15](end_time)
+      - [23:00](end_time)
+      - [13:00](end_time)
+      - [00:30](end_time)
+      - [16:45](end_time)
+      - [10:15](end_time)
+      - [08:30](end_time)
+      - [21:00](end_time)
+      - [18:00](end_time)
+      - [19:00](end_time)
+      - It ends at [9 pm](end_time)
+      - The end time is [11 pm](end_time)
+      - I’ll be done by [12 am](end_time)
+      - The finish time is [9 AM](end_time)
+      - We close at [6 PM](end_time)
+      - It’s over at [20:15](end_time)
+      - Scheduled to end at [17:45](end_time)
+      - The last time is [15:30](end_time)
+      - Expected end time is [14:00](end_time)
+      - Final time is [00:30](end_time)
+      - Expected closing time: [16:45](end_time)
+      - Should be over by [10:15](end_time)
+      - Estimated finish at [08:30](end_time)
+      - Wrapping up at [21:00](end_time)
+      - End is at [18:00](end_time)
+      - We’re done at [19:00](end_time)
+      - Approximately [23:00](end_time)
+      - I’ll finish at [13:00](end_time)
+
 
   - intent: inform_rule
     examples: |
       - [6 pm every Sunday](rule)
       - [7 pm daily](rule)
-      - Recurrence rule is [6 pm every Sunday](rule)
-      - Schedule it [7 pm daily](rule)
-      - Repeat [12 am pevery Monday](rule)
-      - Set for [5 pm every Friday](rule)
-      - [4 pm every day](rule)
-      - [3 am on weekends](rule)
+      - [9 am every weekday](rule)
+      - [10 pm every Monday and Wednesday](rule)
+      - [5 pm on the first Monday of every month](rule)
+      - [8 am on the last Friday of the month](rule)
+      - [6 pm every day](rule)
+      - [noon every Saturday](rule)
+      - [9 am every morning](rule)
+      - [8 pm on weekends](rule)
+      - [7 am every other day](rule)
+      - [9:30 am every Monday, Wednesday, and Friday](rule)
+      - [10 am every third Thursday](rule)
+      - [3 pm on the 15th of every month](rule)
+      - [6:30 pm every second Tuesday](rule)
+      - [8 am every two weeks](rule)
+      - [5 pm on the first Friday in January](rule)
+      - [12:30 pm every weekday](rule)
+      - [4 pm each Saturday and Sunday](rule)
+      - [10:15 am on the first day of the month](rule)
+      - [5 pm every last Wednesday of the month](rule)
+      - [7 am every other Saturday](rule)
+      - [3 pm on January 15th every year](rule)
+      - [6 pm on the last day of the month](rule)
+      - [9 am on every Monday in April](rule)
+      - [7 pm every first weekend of the month](rule)
+      - [8 am every 1st and 15th](rule)
+      - [10 pm on alternate Sundays](rule)
+      - [4 pm on December 31st every year](rule)
+      - [8:30 am on the first weekday of each month](rule)
+      - [7 pm on the 2nd Tuesday of every month](rule)
+      - [6 am on the first and third Monday](rule)
+      - [3:30 pm on the last Thursday of each quarter](rule)
+      - [11 am daily](rule)
+      - [10 pm on the first Friday after the full moon](rule)
+      - [4 pm every alternate Wednesday](rule)
+      - [midnight on New Year’s Eve every year](rule)
+      - [6:45 am on the first Tuesday of each month](rule)
+
 
   - intent: inform_schedule_name
     examples: |
       - [evening lights](schedule_name)
-      - [aki light](schedule_name)
+      - [morning glow](schedule_name)
+      - [sunset lights](schedule_name)
+      - [night light](schedule_name)
+      - [dawn](schedule_name)
+      - [dusk lights](schedule_name)
       - [noon light](schedule_name)
-      - Call it [Evening lights](schedule_name)
-      - Name it [Morning brightness](schedule_name)
-      - The name should be [Office Schedule](schedule_name)
-      - Label it as [Evening lights](schedule_name)
-      - Use the name [Night light](schedule_name)
-      - Let's call it [Weekend glow](schedule_name)
+      - [glow](schedule_name)
+      - [night glow](schedule_name)
+      - [late night lights](schedule_name)
+      - [early riser](schedule_name)
+      - [ambient evening](schedule_name)
+      - [dinner lights](schedule_name)
+      - [relax mode](schedule_name)
+      - [party lights](schedule_name)
+      - [warm glow](schedule_name)
+      - [midnight](schedule_name)
+      - [weekend mode](schedule_name)
+      - [holiday lights](schedule_name)
+      - [bright morning](schedule_name)
+      - [nightfall](schedule_name)
+      - [reading lights](schedule_name)
+      - [study mode](schedule_name)
+      - [focus light](schedule_name)
+      - [early glow](schedule_name)
+      - [cozy evening](schedule_name)
+      - [wake up](schedule_name)
+      - [evening relax](schedule_name)
+      - [noon ambiance](schedule_name)
+      - [siesta light](schedule_name)
+      - [bedtime lights](schedule_name)
+      - [twilight glow](schedule_name)
+      - [power hour](schedule_name)
+      - [office light](schedule_name)
+      - [mood lighting](schedule_name)
+      - [movie night](schedule_name)
+      - [weekend glow](schedule_name)
+      - [cozy corner](schedule_name)
+      - [sunrise start](schedule_name)
+      - [late night mode](schedule_name)
+      - [golden hour](schedule_name)
+      - [twilight](schedule_name)
+      - [chill lights](schedule_name)
+      - [evening ambiance](schedule_name)
+      - [morning breeze](schedule_name)
+      - [quiet night](schedule_name)
+      - [daily start](schedule_name)
+      - [calm down](schedule_name)
+      - [focus session](schedule_name)
+      - [work lights](schedule_name)
+      - [all-day light](schedule_name)
+      - [aki light](schedule_name)
+
 
   - intent: inform_priority
     examples: |
@@ -325,9 +442,48 @@ nlu:
       - [high](priority)
       - [medium](priority)
       - [high](priority)
+      - [High](priority)
+      - [Low](priority)
+      - [HIGH](priority)
+      - [LOW](priority)
+      - [MEDIUM](priority)
+      - [Medium](priority)
       - Set to [low](priority)
       - Make it [low](priority)
       - make it [high](priority)
       - Priority is [medium](priority)
       - With [high](priority)
       - I want the priority at [low](priority)
+
+  - intent: cancel
+    examples: |
+      - cancel
+      - I want to stop
+      - never mind
+      - exit
+      - forget it
+      - don't continue
+
+  - intent: list_zone_schedule
+    examples: |
+      - list schedules in [Zone A]
+      - show schedules for [Zone B]
+      - schedules in [Zone A]
+      - list [Zone A] schedules
+      - show me schedules in [Zone B]
+      - schedules in [Zone B]
+      - show [Zone A] schedule
+      - give me schedules for [Zone A]
+      - [Zone B] schedules
+      - what schedules in [Zone A]?
+      - show me [Zone A] schedules
+      - [Zone A] schedule list
+      - provide [Zone A] schedules
+      - list [Zone B] schedule
+      - show schedule for [Zone A]
+      - show me [Zone A]'s schedule
+      - list [Zone A]'s schedules
+      - list schedules for [Zone B]
+      - show schedule in [Zone B]
+      - give me [Zone B] schedules
+      - tell me [Zone A] schedules

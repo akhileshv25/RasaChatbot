@@ -4,14 +4,15 @@ from typing import Any, Dict, List, Text
 import requests
 from rasa_sdk import Action, Tracker
 from rasa_sdk.executor import CollectingDispatcher
-from rasa_sdk.events import SlotSet
+from rasa_sdk.events import SlotSet ,AllSlotsReset
 from datetime import datetime, timedelta
 from cron import text_to_cron
 from rasa_sdk.events import EventType
 from typing import List, Dict, Text, Any
 import ast
 from rasa_sdk import Tracker, FormValidationAction
-
+from datetime import datetime
+from timeToMillis import extract_start_time_millis
 
 class ActionTurnOnLight(Action):
 
@@ -23,7 +24,7 @@ class ActionTurnOnLight(Action):
 
         if light_id is None:
             dispatcher.utter_message(text="Please specify a valid light ID.")
-            return []
+            return [AllSlotsReset()]
 
         check_status_url = f"http://localhost:8080/api/lights/list/{light_id}"
         change_state_url = f"http://localhost:8080/api/lights/change/{light_id}"
@@ -37,7 +38,7 @@ class ActionTurnOnLight(Action):
                 if current_status == "ON":
                     dispatcher.utter_message(
                         text=f"Light {light_id} is already on 💡.")
-                    return [SlotSet("light_id", None)]
+                    return [AllSlotsReset()]
                 else:
                     change_response = requests.put(
                         change_state_url, json={"lightstate": "ON"})
@@ -59,7 +60,7 @@ class ActionTurnOnLight(Action):
             dispatcher.utter_message(
                 text=f"An unexpected error occurred!!!!!!!!!: {str(e)}")
 
-        return [SlotSet("light_id", None)]
+        return [AllSlotsReset()]
 
 
 class ActionTurnOffLight(Action):
@@ -72,7 +73,7 @@ class ActionTurnOffLight(Action):
 
         if light_id is None:
             dispatcher.utter_message(text="Please specify a valid light ID.")
-            return []
+            return [AllSlotsReset()]
 
         check_status_url = f"http://localhost:8080/api/lights/list/{light_id}"
         change_state_url = f"http://localhost:8080/api/lights/change/{light_id}"
@@ -86,7 +87,7 @@ class ActionTurnOffLight(Action):
                 if current_status == "OFF":
                     dispatcher.utter_message(
                         text=f"Light {light_id} is already off 💡.")
-                    return [SlotSet("light_id", None)]
+                    return [AllSlotsReset()]
                 else:
                     change_response = requests.put(
                         change_state_url, json={"lightstate": "OFF"})
@@ -108,7 +109,7 @@ class ActionTurnOffLight(Action):
             dispatcher.utter_message(
                 text=f"An unexpected error occurred: {str(e)}")
 
-        return [SlotSet("light_id", None)]
+        return [AllSlotsReset()]
 
 # For Zone ON
 
@@ -156,7 +157,7 @@ class ActionZoneOnLight(Action):
                 dispatcher.utter_message(
                     text=f"An unexpected error occurred: {str(e)}")
 
-            return []
+            return [AllSlotsReset()]
 
         zone_name_parts = zone_name.split()
         if len(zone_name_parts) >= 2:
@@ -187,7 +188,7 @@ class ActionZoneOnLight(Action):
             dispatcher.utter_message(
                 text=f"An unexpected error occurred: {str(e)}")
 
-        return [SlotSet("zone_name", None)]
+        return [AllSlotsReset()]
 
 # For Zone OFF
 
@@ -203,7 +204,7 @@ class ActionZoneOffLight(Action):
         print(zone_name)
         if zone_name is None:
             dispatcher.utter_message(text="Please specify a valid Zone Name.")
-            return []
+            return [AllSlotsReset()]
         if len(zone_name.split()) < 2:
             list_all_zones_url = "http://localhost:8080/api/zones/list"
 
@@ -235,7 +236,7 @@ class ActionZoneOffLight(Action):
                 dispatcher.utter_message(
                     text=f"An unexpected error occurred: {str(e)}")
 
-            return []
+            return [AllSlotsReset()]
 
         zone_name_parts = zone_name.split()
         if len(zone_name_parts) >= 2:
@@ -266,7 +267,7 @@ class ActionZoneOffLight(Action):
             dispatcher.utter_message(
                 text=f"An unexpected error occurred: {str(e)}")
 
-        return [SlotSet("zone_name", None)]
+        return [AllSlotsReset()]
 
 
 class ActionSchedulesLight(Action):
@@ -304,7 +305,7 @@ class ActionSchedulesLight(Action):
 
         if zone_name is None or schedule_name is None:
             dispatcher.utter_message(text="Please specify valid details.")
-            return []
+            return [AllSlotsReset()]
 
         if light_state == "on" or light_state == "ON" or light_state == "activate" or light_state == "Activate":
             light_state = "ON"
@@ -335,7 +336,7 @@ class ActionSchedulesLight(Action):
         except ValueError as e:
             dispatcher.utter_message(
                 text=f"Error parsing start time: {str(e)}")
-            return []
+            return [AllSlotsReset()]
 
         start_time_millis = int(parsed_start_time.timestamp() * 1000)
         print(f"Start time in milliseconds: {start_time_millis}")
@@ -354,7 +355,7 @@ class ActionSchedulesLight(Action):
             except ValueError as e:
                 dispatcher.utter_message(
                     text=f"Error parsing end year: {str(e)}")
-                return []
+                return [AllSlotsReset()]
 
         if end_time is not None:
             try:
@@ -367,13 +368,13 @@ class ActionSchedulesLight(Action):
                 except ValueError as e:
                     dispatcher.utter_message(
                         text=f"Error parsing end time: {str(e)}")
-                    return []
+                    return [AllSlotsReset()]
 
             end_time_millis = int(parsed_end_time.timestamp() * 1000)
             print(f"End time in milliseconds: {end_time_millis}")
         else:
             dispatcher.utter_message(text="Please provide an end time.")
-            return []
+            return [AllSlotsReset()]
 
         zoneidbyname = f"http://localhost:8080/api/zones/byName/{zone_name}"
 
@@ -389,13 +390,13 @@ class ActionSchedulesLight(Action):
                     if zoneId is None:
                         dispatcher.utter_message(
                             text="Error: Zone ID not found in the response.")
-                        return []
+                        return [AllSlotsReset()]
                 elif isinstance(zoneId_response, int):
                     zoneId = zoneId_response
                 else:
                     dispatcher.utter_message(
                         text="Error: Unexpected response format.")
-                    return []
+                    return [AllSlotsReset()]
 
             else:
                 dispatcher.utter_message(
@@ -407,7 +408,7 @@ class ActionSchedulesLight(Action):
         except Exception as e:
             dispatcher.utter_message(
                 text=f"An unexpected error occurred: {str(e)}")
-            return []
+            return [AllSlotsReset()]
 
         schedule_payload = {
             "priority": priority,
@@ -444,18 +445,7 @@ class ActionSchedulesLight(Action):
             dispatcher.utter_message(
                 text=f"An unexpected error occurred 222: {str(e)}")
 
-        return [
-            SlotSet("zone_name", None),
-            SlotSet("light_state", None),
-            SlotSet("brightness_level", None),
-            SlotSet("start_time", None),
-            SlotSet("end_time", None),
-            SlotSet("rule", None),
-            SlotSet("end_year", None),
-            SlotSet("schedule_name", None),
-            SlotSet("tag", None),
-            SlotSet("light_state_end", None),
-        ]
+        return [AllSlotsReset()]
 
 
 class ActionZoneBrightness(Action):
@@ -469,10 +459,10 @@ class ActionZoneBrightness(Action):
 
         if zone_name is None:
             dispatcher.utter_message(text="Please specify a Zone Name.")
-            return []
+            return [AllSlotsReset()]
         if brightness_level is None:
             dispatcher.utter_message(text="Please specify a Brightness level.")
-            return []
+            return [AllSlotsReset()]
 
         change_state_url = f"http://localhost:8080/api/lights/update-brightness/{zone_name}?brightnessLevel={brightness_level}"
 
@@ -493,7 +483,7 @@ class ActionZoneBrightness(Action):
             dispatcher.utter_message(
                 text=f"An unexpected error occurred: {str(e)}")
 
-        return [SlotSet("zone_name", None), SlotSet("brightness_level", None)]
+        return [AllSlotsReset()]
 
 
 class ActionLightBrightness(Action):
@@ -508,13 +498,13 @@ class ActionLightBrightness(Action):
 
         if zone_name is None:
             dispatcher.utter_message(text="Please specify a Zone Name.")
-            return []
+            return [AllSlotsReset()]
         if brightness_level is None:
             dispatcher.utter_message(text="Please specify a Brightness level.")
-            return []
+            return [AllSlotsReset()]
         if light_id is None:
             dispatcher.utter_message(text="Please specify a Light Id.")
-            return []
+            return [AllSlotsReset()]
 
         change_state_url = f"http://localhost:8080/api/lights/brightness/update/zone/light/{zone_name}?lightid={light_id}&brightnessLevel={brightness_level}"
 
@@ -535,7 +525,7 @@ class ActionLightBrightness(Action):
             dispatcher.utter_message(
                 text=f"An unexpected error occurred: {str(e)}")
 
-        return [SlotSet("zone_name", None), SlotSet("brightness_level", None), SlotSet("light_id", None)]
+        return [AllSlotsReset()]
 
 
 class ActionListZone(Action):
@@ -578,7 +568,7 @@ class ActionListZone(Action):
             dispatcher.utter_message(
                 text=f"An unexpected error occurred: {str(e)}")
 
-        return []
+        return [AllSlotsReset()]
 
 
 class ActionListZoneLights(Action):
@@ -591,7 +581,7 @@ class ActionListZoneLights(Action):
         list_all_zones_url = f"http://localhost:8080/api/lights/zone/light/{zone_name}"
         if zone_name is None:
             dispatcher.utter_message(text="Please specify a Zone Name.")
-            return []
+            return [AllSlotsReset()]
         try:
             response = requests.get(list_all_zones_url)
 
@@ -624,7 +614,7 @@ class ActionListZoneLights(Action):
             dispatcher.utter_message(
                 text=f"An unexpected error occurred: {str(e)}")
 
-        return [SlotSet("zone_name", None)]
+        return [AllSlotsReset()]
 
 
 class ActionLightsStatus(Action):
@@ -638,7 +628,7 @@ class ActionLightsStatus(Action):
 
         if light_id is None:
             dispatcher.utter_message(text="Please specify a Light Id.")
-            return []
+            return [AllSlotsReset()]
 
         try:
             response = requests.get(light_status_url)
@@ -678,7 +668,7 @@ class ActionLightsStatus(Action):
                 text=f"An unexpected error occurred: {str(e)}"
             )
 
-        return [SlotSet("light_id", None)]
+        return [AllSlotsReset()]
 
 
 class ActionZoneLightStatus(Action):
@@ -693,7 +683,7 @@ class ActionZoneLightStatus(Action):
 
         if not zone_name:
             dispatcher.utter_message(text="Please specify a zone name.")
-            return []
+            return [AllSlotsReset()]
 
         try:
             state_response = requests.get(zone_light_state_url)
@@ -744,30 +734,8 @@ class ActionZoneLightStatus(Action):
                 text=f"An unexpected error occurred: {str(e)}"
             )
 
-        return [SlotSet("zone_name", None)]
+        return [AllSlotsReset()]
 
-
-class ActionScheduleLight(Action):
-    def name(self) -> Text:
-        return "action_schedule_light"
-
-    def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-        zone_name = tracker.get_slot("zone_name")
-        light_state = tracker.get_slot("light_state")
-        brightness_level = tracker.get_slot("brightness_level")
-        rule = tracker.get_slot("rule")
-        end_time = tracker.get_slot("end_time")
-        schedule_name = tracker.get_slot("schedule_name")
-        priority = tracker.get_slot("priority")
-
-        # Create a message with all the details to confirm
-        confirmation_message = (f"Scheduled light for zone '{zone_name}' with the following settings:\n"
-                                f"State: {light_state}, Brightness: {brightness_level},\n"
-                                f"Rule: {rule}, End Time: {end_time},\n"
-                                f"Schedule Name: {schedule_name}, Priority: {priority}")
-
-        dispatcher.utter_message(text=confirmation_message)
-        return []
 
 
 class ValidateScheduleLightForm(FormValidationAction):
@@ -783,7 +751,6 @@ class ValidateScheduleLightForm(FormValidationAction):
     ) -> Dict[Text, Any]:
         """Validate the light state to ensure it's either 'on' or 'off'."""
 
-        # Convert slot_value to lowercase for consistency
         light_state = slot_value.strip().lower()
 
         if light_state in ["on", "off", "ON", "OFF", "On", "oFF", "Off"]:
@@ -815,3 +782,250 @@ class ValidateScheduleLightForm(FormValidationAction):
             dispatcher.utter_message(
                 text="Brightness level must be between 0 and 100.")
             return {"brightness_level": None}
+    
+    async def validate_priority(
+        self,
+        slot_value: Any,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any]
+    ) -> Dict[Text, Any]:
+        """Validate the priority to ensure it's 'high', 'medium', or 'low'."""
+
+        priority = slot_value.strip().lower()
+
+        if priority in ["high", "medium", "low"]:
+            return {"priority": priority}
+        else:
+            dispatcher.utter_message(
+                text="Please enter a valid priority level: 'high', 'medium', or 'low'."
+            )
+            return {"priority": None}
+
+    async def validate_end_time(
+        self,
+        slot_value: Any,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any]
+    ) -> Dict[Text, Any]:
+        """Validate end_time to ensure it follows a recognizable time format."""
+        
+        time_input = slot_value.strip().lower()
+        valid_time = None
+
+        for time_format in ["%I %p", "%H:%M", "%I:%M %p", "%H"]:
+            try:
+                valid_time = datetime.strptime(time_input, time_format).time()
+                break
+            except ValueError:
+                continue
+
+        if valid_time:
+            return {"end_time": valid_time.strftime("%H:%M")}
+        else:
+            dispatcher.utter_message(
+                text="Please enter a valid time in formats like '6 am', '18:00', or '6:30 PM'."
+            )
+            return {"end_time": None}
+
+
+
+class ActionConfirmSchedule(Action):
+    def name(self) -> Text:
+        return "action_confirm_schedule"
+
+    async def run(
+        self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]
+    ) -> list:
+        confirmation = tracker.get_slot("confirmation")
+        if confirmation and confirmation.lower() in ["yes", "confirm", "sure"]:
+                    # Retrieve the slot values
+            zone_name = tracker.get_slot("zone_name")
+            light_state = tracker.get_slot("light_state")
+            brightness_level = tracker.get_slot("brightness_level")
+            rule = tracker.get_slot("rule")
+            end_time = tracker.get_slot("end_time")
+            schedule_name = tracker.get_slot("schedule_name")
+            priority = tracker.get_slot("priority")
+
+            priority_valid = priority.strip().lower()
+
+            if priority_valid == "high":
+                priority = 1
+            elif priority_valid == 'low':
+                priority = 3
+            elif priority_valid == 'medium':
+                priority = 2
+            
+            light_state_valid = light_state.strip().lower()
+
+            if light_state_valid == "on":
+                light_state = "ON"
+            elif light_state_valid == "off":
+                light_state = "OFF"
+            elif light_state_valid == "photocell":
+                light_state = "PHOTOCELL"
+
+
+
+
+
+
+            zoneidbyname = f"http://localhost:8080/api/zones/byName/{zone_name}"
+
+            try:
+                status_response = requests.get(zoneidbyname)
+
+                if status_response.status_code == 200:
+                    zoneId_response = status_response.json()
+                    print(zoneId_response)
+
+                    if isinstance(zoneId_response, dict):
+                        zoneId = zoneId_response.get("zoneid")
+                        if zoneId is None:
+                            dispatcher.utter_message(
+                                text="Error: Zone ID not found in the response.")
+                            return [AllSlotsReset()]
+                    elif isinstance(zoneId_response, int):
+                        zoneId = zoneId_response
+                    else:
+                        dispatcher.utter_message(
+                            text="Error: Unexpected response format.")
+                        return [AllSlotsReset()]
+
+                else:
+                    dispatcher.utter_message(
+                        text=f"Error: Received unexpected status code {status_response.status_code}.")
+
+            except requests.exceptions.ConnectionError:
+                dispatcher.utter_message(
+                    text="Error: Unable to connect to the zone list API.")
+            except Exception as e:
+                dispatcher.utter_message(
+                    text=f"An unexpected error occurred: {str(e)}")
+                return [AllSlotsReset()]
+
+            schedule_payload = {
+                "priority": priority,
+                "lightstate": light_state,
+                "lightlevel": brightness_level,
+                "starttime": extract_start_time_millis(rule),
+                "endtime": brightness_level,
+                "recurrenceRule": text_to_cron(rule),
+                "startdate": extract_start_time_millis(rule),
+                "enddate": extract_start_time_millis(end_time),
+                "schedulename": schedule_name,
+                "zone": {
+                    "zoneid": zoneId
+                }
+            }
+
+            change_state_url = "http://localhost:8080/api/schedules/save"
+
+            try:
+                change_response = requests.post(
+                    change_state_url, json=schedule_payload)
+
+                if change_response.status_code == 200:
+                    dispatcher.utter_message(text="Schedules have been added.")
+                elif change_response.status_code == 208:
+                    dispatcher.utter_message(text="Schedules already exist.")
+                else:
+                    dispatcher.utter_message(text="Failed to save schedules.")
+
+            except requests.exceptions.ConnectionError:
+                dispatcher.utter_message(
+                    text="Error: Unable to connect to the schedules control API.")
+            except Exception as e:
+                dispatcher.utter_message(
+                    text=f"An unexpected error occurred 222: {str(e)}")
+                dispatcher.utter_message(text="Schedule added successfully! ✅")
+            return [AllSlotsReset()]  
+
+        else:
+            dispatcher.utter_message(text="Schedule canceled. ❌")
+            return [AllSlotsReset()]  
+
+class ActionCancelSchedule(Action):
+    def name(self):
+        return "action_reset_slots"
+
+    def run(self, dispatcher, tracker, domain):
+        return [AllSlotsReset()]
+        
+
+
+class ActionListZoneSchedules(Action):
+
+    def name(self) -> str:
+        return "action_list_zone_schedule"
+
+    def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]) -> List[EventType]:
+
+        zone_name = tracker.get_slot("zone_name")
+        list_all_zones_url = f"http://localhost:8080/api/schedules/listbyzone/{zone_name}"
+        print(zone_name)
+
+        try:
+            response = requests.get(list_all_zones_url)
+
+            if response.status_code == 200:
+                schedules = response.json() 
+
+                if isinstance(schedules, list):
+                   
+                    if schedules:
+                        for schedule in schedules:
+                            schedule_name = schedule.get("schedulename", "N/A")
+                            priority = schedule.get("priority", "N/A")
+                            start_time = self.convert_millis_to_time(schedule.get("starttime", 0))
+                            end_time = self.convert_millis_to_time(schedule.get("endtime", 0))
+                            light_state = schedule.get("lightstate", "N/A")
+                            light_level = schedule.get("lightlevel", "N/A")
+                            recurrence_rule = schedule.get("recurrenceRule", "N/A")
+                            zone_name = schedule.get("zone", {}).get("name", "N/A")
+                            
+                            print(schedule_name)
+                            print(priority)
+                            print(start_time)
+                            print(end_time)
+                           
+                            schedule_message = f"""
+                            📅 Schedule: {schedule_name}
+                            🕐 Start Time: {start_time}
+                            🕒 End Time: {end_time}
+                            💡 Light State: {light_state}
+                            🌟 Brightness Level: {light_level}%
+                            🔁 Recurrence: {recurrence_rule}
+                            🌍 Zone: {zone_name}
+                            🔢 Priority: {priority}
+                            """
+
+                            
+                            dispatcher.utter_message(text=schedule_message)
+
+                    else:
+                        dispatcher.utter_message(text="No schedules found for this zone.")
+
+                else:
+                    dispatcher.utter_message(text="Error: Response format is not as expected.")
+            else:
+                dispatcher.utter_message(text="Failed to fetch the list of schedules.")
+
+        except requests.exceptions.ConnectionError:
+            dispatcher.utter_message(text="Error: Unable to connect to the zone list API.")
+        except Exception as e:
+            dispatcher.utter_message(text=f"An unexpected error occurred: {str(e)}")
+
+        return []
+
+    def convert_millis_to_time(self, millis: int) -> str:
+        """Converts milliseconds to a human-readable time format."""
+        if millis == 0:
+            return "N/A"
+        
+        seconds = millis / 1000
+        time_obj = datetime.utcfromtimestamp(seconds)
+        
+        return time_obj.strftime("%H:%M")

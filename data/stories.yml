@@ -93,3 +93,10 @@ stories:
       - slot_was_set:
           - zone_name: "Zone C"
       - action: action_check_zone_status
+
+  - story: list all the schedules
+    steps:
+      - intent: list_zone_schedule
+      - slot_was_set:
+          - zone_name: "Zone A"
+      - action: action_list_zone_schedule
