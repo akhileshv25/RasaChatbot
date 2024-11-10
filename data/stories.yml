@@ -45,7 +45,7 @@ stories:
           - tag: null
           - priority: null
       - action: action_schedules
-      - action: utter_schedules
+
   - story: chage brightness rule of the Zone Story
     steps:
       - intent: brightness_Zone
@@ -100,3 +100,10 @@ stories:
       - slot_was_set:
           - zone_name: "Zone A"
       - action: action_list_zone_schedule
+
+  - story: delete schedules rule
+    steps:
+      - intent: delete_scheduleby_name
+      - slot_was_set:
+          - schedule_name: "Night light"
+      - action: action_delete_scheduleby_name

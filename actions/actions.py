@@ -4,7 +4,7 @@ from typing import Any, Dict, List, Text
 import requests
 from rasa_sdk import Action, Tracker
 from rasa_sdk.executor import CollectingDispatcher
-from rasa_sdk.events import SlotSet ,AllSlotsReset
+from rasa_sdk.events import SlotSet, AllSlotsReset
 from datetime import datetime, timedelta
 from cron import text_to_cron
 from rasa_sdk.events import EventType
@@ -13,6 +13,7 @@ import ast
 from rasa_sdk import Tracker, FormValidationAction
 from datetime import datetime
 from timeToMillis import extract_start_time_millis
+
 
 class ActionTurnOnLight(Action):
 
@@ -124,7 +125,7 @@ class ActionZoneOnLight(Action):
 
         if zone_name is None:
             dispatcher.utter_message(text="Please specify a valid Zone Name.")
-            return []
+            return [AllSlotsReset()]
         if len(zone_name.split()) < 2:
             list_all_zones_url = "http://localhost:8080/api/zones/list"
 
@@ -496,11 +497,26 @@ class ActionLightBrightness(Action):
         brightness_level = tracker.get_slot("brightness_level")
         light_id = tracker.get_slot("light_id")
 
-        if zone_name is None:
-            dispatcher.utter_message(text="Please specify a Zone Name.")
+        if zone_name is None and brightness_level is None and light_id:
+            dispatcher.utter_message(text="Please specify a Valid Details.")
+            return [AllSlotsReset()]
+        elif zone_name is None and brightness_level is None:
+            dispatcher.utter_message(
+                text="Please specify a Zone name and Brightness.")
+            return [AllSlotsReset()]
+        elif zone_name is None and light_id is None:
+            dispatcher.utter_message(
+                text="Please specify a Zone name and light id.")
+            return [AllSlotsReset()]
+        elif brightness_level is None and light_id is None:
+            dispatcher.utter_message(
+                text="Please specify a Brightness name and light id.")
             return [AllSlotsReset()]
         if brightness_level is None:
             dispatcher.utter_message(text="Please specify a Brightness level.")
+            return [AllSlotsReset()]
+        if zone_name is None:
+            dispatcher.utter_message(text="Please specify a Zone Name.")
             return [AllSlotsReset()]
         if light_id is None:
             dispatcher.utter_message(text="Please specify a Light Id.")
@@ -737,7 +753,6 @@ class ActionZoneLightStatus(Action):
         return [AllSlotsReset()]
 
 
-
 class ValidateScheduleLightForm(FormValidationAction):
     def name(self) -> Text:
         return "validate_schedule_light_form"
@@ -782,7 +797,7 @@ class ValidateScheduleLightForm(FormValidationAction):
             dispatcher.utter_message(
                 text="Brightness level must be between 0 and 100.")
             return {"brightness_level": None}
-    
+
     async def validate_priority(
         self,
         slot_value: Any,
@@ -810,7 +825,7 @@ class ValidateScheduleLightForm(FormValidationAction):
         domain: Dict[Text, Any]
     ) -> Dict[Text, Any]:
         """Validate end_time to ensure it follows a recognizable time format."""
-        
+
         time_input = slot_value.strip().lower()
         valid_time = None
 
@@ -830,7 +845,6 @@ class ValidateScheduleLightForm(FormValidationAction):
             return {"end_time": None}
 
 
-
 class ActionConfirmSchedule(Action):
     def name(self) -> Text:
         return "action_confirm_schedule"
@@ -840,7 +854,7 @@ class ActionConfirmSchedule(Action):
     ) -> list:
         confirmation = tracker.get_slot("confirmation")
         if confirmation and confirmation.lower() in ["yes", "confirm", "sure"]:
-                    # Retrieve the slot values
+            # Retrieve the slot values
             zone_name = tracker.get_slot("zone_name")
             light_state = tracker.get_slot("light_state")
             brightness_level = tracker.get_slot("brightness_level")
@@ -857,7 +871,7 @@ class ActionConfirmSchedule(Action):
                 priority = 3
             elif priority_valid == 'medium':
                 priority = 2
-            
+
             light_state_valid = light_state.strip().lower()
 
             if light_state_valid == "on":
@@ -866,11 +880,6 @@ class ActionConfirmSchedule(Action):
                 light_state = "OFF"
             elif light_state_valid == "photocell":
                 light_state = "PHOTOCELL"
-
-
-
-
-
 
             zoneidbyname = f"http://localhost:8080/api/zones/byName/{zone_name}"
 
@@ -941,11 +950,12 @@ class ActionConfirmSchedule(Action):
                 dispatcher.utter_message(
                     text=f"An unexpected error occurred 222: {str(e)}")
                 dispatcher.utter_message(text="Schedule added successfully! ✅")
-            return [AllSlotsReset()]  
+            return [AllSlotsReset()]
 
         else:
             dispatcher.utter_message(text="Schedule canceled. ❌")
-            return [AllSlotsReset()]  
+            return [AllSlotsReset()]
+
 
 class ActionCancelSchedule(Action):
     def name(self):
@@ -953,7 +963,6 @@ class ActionCancelSchedule(Action):
 
     def run(self, dispatcher, tracker, domain):
         return [AllSlotsReset()]
-        
 
 
 class ActionListZoneSchedules(Action):
@@ -971,26 +980,30 @@ class ActionListZoneSchedules(Action):
             response = requests.get(list_all_zones_url)
 
             if response.status_code == 200:
-                schedules = response.json() 
+                schedules = response.json()
 
                 if isinstance(schedules, list):
-                   
+
                     if schedules:
                         for schedule in schedules:
                             schedule_name = schedule.get("schedulename", "N/A")
                             priority = schedule.get("priority", "N/A")
-                            start_time = self.convert_millis_to_time(schedule.get("starttime", 0))
-                            end_time = self.convert_millis_to_time(schedule.get("endtime", 0))
+                            start_time = self.convert_millis_to_time(
+                                schedule.get("starttime", 0))
+                            end_time = self.convert_millis_to_time(
+                                schedule.get("endtime", 0))
                             light_state = schedule.get("lightstate", "N/A")
                             light_level = schedule.get("lightlevel", "N/A")
-                            recurrence_rule = schedule.get("recurrenceRule", "N/A")
-                            zone_name = schedule.get("zone", {}).get("name", "N/A")
-                            
+                            recurrence_rule = schedule.get(
+                                "recurrenceRule", "N/A")
+                            zone_name = schedule.get(
+                                "zone", {}).get("name", "N/A")
+
                             print(schedule_name)
                             print(priority)
                             print(start_time)
                             print(end_time)
-                           
+
                             schedule_message = f"""
                             📅 Schedule: {schedule_name}
                             🕐 Start Time: {start_time}
@@ -1002,21 +1015,25 @@ class ActionListZoneSchedules(Action):
                             🔢 Priority: {priority}
                             """
 
-                            
                             dispatcher.utter_message(text=schedule_message)
 
                     else:
-                        dispatcher.utter_message(text="No schedules found for this zone.")
+                        dispatcher.utter_message(
+                            text="No schedules found for this zone.")
 
                 else:
-                    dispatcher.utter_message(text="Error: Response format is not as expected.")
+                    dispatcher.utter_message(
+                        text="Error: Response format is not as expected.")
             else:
-                dispatcher.utter_message(text="Failed to fetch the list of schedules.")
+                dispatcher.utter_message(
+                    text="Failed to fetch the list of schedules.")
 
         except requests.exceptions.ConnectionError:
-            dispatcher.utter_message(text="Error: Unable to connect to the zone list API.")
+            dispatcher.utter_message(
+                text="Error: Unable to connect to the zone list API.")
         except Exception as e:
-            dispatcher.utter_message(text=f"An unexpected error occurred: {str(e)}")
+            dispatcher.utter_message(
+                text=f"An unexpected error occurred: {str(e)}")
 
         return []
 
@@ -1024,8 +1041,42 @@ class ActionListZoneSchedules(Action):
         """Converts milliseconds to a human-readable time format."""
         if millis == 0:
             return "N/A"
-        
+
         seconds = millis / 1000
         time_obj = datetime.utcfromtimestamp(seconds)
-        
+
         return time_obj.strftime("%H:%M")
+
+
+class ActionListZoneSchedules(Action):
+
+    def name(self) -> str:
+        return "action_delete_scheduleby_name"
+
+    def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]) -> List[EventType]:
+
+        schedule_name = tracker.get_slot("schedule_name")
+        print(schedule_name)
+
+        delete_schedules_url = f"http://localhost:8080/api/schedules/remove/byname/{schedule_name}"
+
+        try:
+            response = requests.delete(delete_schedules_url)
+
+            if response.status_code == 200:
+                dispatcher.utter_message(text="Schedule deleted successfully.")
+            else:
+                dispatcher.utter_message(
+                    text="schedule not found. Please try again."
+                )
+
+        except requests.exceptions.ConnectionError:
+            dispatcher.utter_message(
+                text="Error: Unable to connect to the zone list API."
+            )
+        except Exception as e:
+            dispatcher.utter_message(
+                text=f"An unexpected error occurred: {str(e)}"
+            )
+
+        return [AllSlotsReset()]

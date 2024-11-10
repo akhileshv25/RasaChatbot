@@ -46,7 +46,7 @@ rules:
           - tag: null
           - priority: null
       - action: action_schedules
-      - action: utter_schedules
+
   - rule: chage brightness rule of the Zone
     steps:
       - intent: brightness_Zone
@@ -120,11 +120,11 @@ rules:
     steps:
       - action: schedule_light_form
       - active_loop: null
-      - action : action_confirm_schedule
+      - action: action_confirm_schedule
 
   - rule: Cancel schedule light form
     condition:
-      - active_loop: schedule_light_form  
+      - active_loop: schedule_light_form
     steps:
       - intent: cancel
       - action: action_deactivate_loop
@@ -132,10 +132,16 @@ rules:
       - action: action_reset_slots
       - action: utter_cancel_confirmation
 
-
   - rule: list all the schedules
     steps:
       - intent: list_zone_schedule
       - slot_was_set:
           - zone_name: null
       - action: action_list_zone_schedule
+
+  - rule: delete schedules rule
+    steps:
+      - intent: delete_scheduleby_name
+      - slot_was_set:
+          - schedule_name: null
+      - action: action_delete_scheduleby_name

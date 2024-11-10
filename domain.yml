@@ -27,6 +27,7 @@ intents:
   - inform_priority
   - cancel
   - list_zone_schedule
+  - delete_scheduleby_name
 
 entities:
   - light_id
@@ -159,6 +160,7 @@ actions:
   - action_confirm_schedule
   - action_reset_slots
   - action_list_zone_schedule
+  - action_delete_scheduleby_name
 
 responses:
   utter_ask_zone_name:
@@ -188,7 +190,7 @@ responses:
         🔢 Priority: {priority}
 
         Do you confirm this schedule? Please reply with 'yes' or 'no'.
-  
+
   utter_cancel_confirmation:
     - text: "The schedule setup has been canceled. Let me know if there's anything else I can help you with."
 
@@ -207,8 +209,6 @@ responses:
 
   utter_greet:
     - text: "Hello! How can I assist you today?"
-  utter_schedules:
-    - text: "action_schedules performed!!!!!!!!!!!"
 
 session_config:
   session_expiration_time: 60
