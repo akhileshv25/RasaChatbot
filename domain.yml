@@ -164,19 +164,31 @@ actions:
 
 responses:
   utter_ask_zone_name:
-    - text: "For which zone would you like to schedule the light? (e.g., Zone A)"
+    - text: |
+        For which zone would you like to 
+        schedule the light? (e.g., Zone A)
   utter_ask_light_state:
     - text: "What should be the light state (ON/OFF)?"
   utter_ask_brightness_level:
-    - text: "What should be the brightness level (0-100)?"
+    - text: |
+        What should be the brightness 
+        level (0-100)?
   utter_ask_rule:
-    - text: "Please specify the recurrence rule (e.g., 6 pm every Sunday)."
+    - text: |
+        Please specify the recurrence rule 
+        (e.g., 6 pm every Sunday).
   utter_ask_end_time:
-    - text: "When should this schedule end? (e.g., 6 am)"
+    - text: |
+        When should this schedule end? 
+        (e.g., 6 am)
   utter_ask_schedule_name:
-    - text: "Please provide a name for this schedule (e.g., Evening Lights)."
+    - text: |
+        Please provide a name for 
+        this schedule (e.g., Evening Lights)."
   utter_ask_priority:
-    - text: "Please specify the priority level for this schedule(High/low/medium)."
+    - text: |
+        Please specify the priority level 
+        for this schedule(High/low/medium).
   utter_ask_confirmation:
     - text: |
         Here are the details for the new schedule:
@@ -189,15 +201,23 @@ responses:
         🏷️ Schedule Name: {schedule_name}
         🔢 Priority: {priority}
 
-        Do you confirm this schedule? Please reply with 'yes' or 'no'.
+        Do you confirm this schedule? 
+        Please reply with 'yes' or 'no'.
 
   utter_cancel_confirmation:
-    - text: "The schedule setup has been canceled. Let me know if there's anything else I can help you with."
+    - text: |
+        The schedule setup has been canceled. 
+        Let me know if there's anything else 
+        I can help you with.
 
   utter_brightness_fallback:
-    - text: "Sorry I didn't get that. Can you specify the Zone name properly?"
+    - text: |
+        Sorry I didn't get that. 
+        Can you specify the Zone name properly?
   utter_please_rephrase:
-    - text: Sorry I didn't get that. Can you rephrase?
+    - text: |
+        Sorry I didn't get that. 
+        Can you rephrase?
   utter_task:
     - text: "Lights Turned ON Successfully!!!💡"
 
@@ -205,7 +225,9 @@ responses:
     - text: "Lights Turned OFF Successfully!!!💡"
 
   utter_ask_light_id:
-    - text: "Which light would you like to control? Please specify the light ID."
+    - text: |
+        Which light would you like to control? 
+        Please specify the light ID.
 
   utter_greet:
     - text: "Hello! How can I assist you today?"

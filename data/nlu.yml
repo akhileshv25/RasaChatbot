@@ -156,30 +156,31 @@ nlu:
 
   - intent: brightness_light
     examples: |
-      - set the brightness of light [1](light_id) in [Zone A](zone_name) to [75](brightness_level)%
-      - adjust light [2](light_id) brightness in [Zone B](zone_name) to [60](brightness_level)%
-      - change brightness of light [3](light_id) in [Zone C](zone_name) to [100](brightness_level)%
-      - make light [4](light_id) in [Zone D](zone_name) brightness [45](brightness_level)%
-      - turn on light [5](light_id) in [Zone E](zone_name) to [30](brightness_level)%
-      - set the brightness of light[6](light_id) in [Zone F](zone_name) to [95](brightness_level)%
-      - dim light [7](light_id) in [Zone G](zone_name) to [50](brightness_level)%
-      - I want to set light [8](light_id) brightness in [Zone H](zone_name) to [70](brightness_level)%
-      - brighten light[9](light_id) in [Zone I](zone_name) to [20](brightness_level)%
-      - Make light [1](light_id) in [Zone A](zone_name) brighter to [75](brightness_level)%
-      - Turn down light [2](light_id) in [Zone B](zone_name) to [60](brightness_level)%
-      - Make light [3](light_id) in [Zone C](zone_name) super bright at [100](brightness_level)%
-      - Make light [4](light_id) in [Zone D](zone_name) a bit dimmer to [45](brightness_level)%
-      - Set light [5](light_id) in [Zone E](zone_name) to [30](brightness_level)%
-      - Make light [6](light_id) in [Zone F](zone_name) really bright at [95](brightness_level)%
-      - Dim light [7](light_id) in [Zone G](zone_name) to [50](brightness_level)%
-      - I want light [8](light_id) in [Zone H](zone_name) at [70](brightness_level)%
-      - Make light [9](light_id) in [Zone I](zone_name) a bit brighter to [20](brightness_level)%
-      - Make light [10](light_id) brighter in [Zone J](zone_name)
-      - Set light [11](light_id) in [Zone K](zone_name) brightness to [80](brightness_level)%
-      - Turn up light [12](light_id) in [Zone L](zone_name) to [90](brightness_level)%
-      - Make light [13](light_id) in [Zone M](zone_name) lower to [40](brightness_level)%
-      - Turn down brightness of light [14](light_id) in [Zone N](zone_name)
-      - Make light [15](light_id) in [Zone O](zone_name) less bright
+      - set the brightness of light [1](light_id) to [75](brightness_level)%
+      - adjust light [2](light_id) brightness to [60](brightness_level)%
+      - change brightness of light [3](light_id) to [100](brightness_level)%
+      - make light [4](light_id) brightness [45](brightness_level)%
+      - turn on light [5](light_id) to [30](brightness_level)%
+      - set the brightness of light [6](light_id) to [95](brightness_level)%
+      - dim light [7](light_id) to [50](brightness_level)%
+      - I want to set light [8](light_id) brightness to [70](brightness_level)%
+      - brighten light [9](light_id) to [20](brightness_level)%
+      - Make light [1](light_id) brighter to [75](brightness_level)%
+      - Turn down light [2](light_id) to [60](brightness_level)%
+      - Make light [3](light_id) super bright at [100](brightness_level)%
+      - Make light [4](light_id) a bit dimmer to [45](brightness_level)%
+      - Set light [5](light_id) to [30](brightness_level)%
+      - Make light [6](light_id) really bright at [95](brightness_level)%
+      - Dim light [7](light_id) to [50](brightness_level)%
+      - I want light [8](light_id) at [70](brightness_level)%
+      - Make light [9](light_id) a bit brighter to [20](brightness_level)%
+      - Make light [10](light_id) brighter
+      - Set light [11](light_id) brightness to [80](brightness_level)%
+      - Turn up light [12](light_id) to [90](brightness_level)%
+      - Make light [13](light_id) lower to [40](brightness_level)%
+      - Turn down brightness of light [14](light_id)
+      - Make light [15](light_id) less bright
+
 
   - intent: brightness_fallback
     examples: |
@@ -327,9 +328,6 @@ nlu:
       - light
       - on
       - off
-      - exit
-      - yes
-      - no
 
   - intent: request_schedule
     examples: |
