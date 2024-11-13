@@ -11,7 +11,7 @@ from rasa_sdk import Tracker, FormValidationAction
 from timeToMillis import extract_start_time_millis
 from function import change_light_state , get_zone_list ,change_zone_light_state,update_brightness,check_status_light,check_zone_status,get_zone_lights
 
-from function import delete_schedule, list_zone_schedule
+from function import delete_schedule, list_zone_schedule, change_light_state_using_zone_name,update_brightness_light_using_zonename
 api = "http://localhost:8080/api"
 
 class ActionTurnOnLight(Action):
@@ -20,13 +20,21 @@ class ActionTurnOnLight(Action):
 
     def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: dict):
         light_id = tracker.get_slot("light_id")
+        zone_name = tracker.get_slot("zone_name")
+
 
         if light_id is None:
             dispatcher.utter_message(text="Please specify a valid light ID.")
             return [AllSlotsReset()]
+        elif light_id and zone_name:
+            zone_name = zone_name.strip().upper()
+            message = change_light_state_using_zone_name(light_id , zone_name , "ON")
+            dispatcher.utter_message(text=message)
+        elif light_id:
+            message = change_light_state(light_id, "ON")
+            dispatcher.utter_message(text=message)
 
-        message = change_light_state(light_id, "ON")
-        dispatcher.utter_message(text=message)
+
 
         return [AllSlotsReset()]
 
@@ -39,13 +47,22 @@ class ActionTurnOffLight(Action):
 
     def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: dict):
         light_id = tracker.get_slot("light_id")
+        zone_name = tracker.get_slot("zone_name")
+        
+
+
 
         if light_id is None:
             dispatcher.utter_message(text="Please specify a valid light ID.")
             return [AllSlotsReset()]
+        elif light_id and zone_name:
+            zone_name = zone_name.strip().upper()
+            message = change_light_state_using_zone_name(light_id , zone_name , "OFF")
+            dispatcher.utter_message(text=message)
+        elif light_id:
+            message = change_light_state(light_id, "OFF")
+            dispatcher.utter_message(text=message)
 
-        message = change_light_state(light_id, "OFF")
-        dispatcher.utter_message(text=message)
 
         return [AllSlotsReset()]
 
@@ -60,17 +77,20 @@ class ActionZoneOnLight(Action):
 
     def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: dict):
         zone_name = tracker.get_slot("zone_name")
-        zone_name = zone_name.strip().upper()
 
         if zone_name is None:
             dispatcher.utter_message(text="Please specify a valid Zone Name.")
             return [AllSlotsReset()]
         if len(zone_name.split()) < 2:
+            zone_name = zone_name.strip().upper()
+
             dispatcher.utter_message(text="Please specify a valid Zone Name.")
             zone_list_message = get_zone_list()
             dispatcher.utter_message(text=zone_list_message)
             return [AllSlotsReset()]
         else:
+            zone_name = zone_name.strip().upper()
+
             message = change_zone_light_state(zone_name, "ON")
             dispatcher.utter_message(text=message)
 
@@ -86,18 +106,19 @@ class ActionZoneOffLight(Action):
 
     def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: dict):
         zone_name = tracker.get_slot("zone_name")
-        zone_name = zone_name.strip().upper()
 
         print(zone_name)
         if zone_name is None:
             dispatcher.utter_message(text="Please specify a valid Zone Name.")
             return [AllSlotsReset()]
         if len(zone_name.split()) < 2:
+            zone_name = zone_name.strip().upper()
             zone_list_message = get_zone_list()
             dispatcher.utter_message(text="Please specify a valid Zone Name.")
             dispatcher.utter_message(text=zone_list_message)
             return [AllSlotsReset()]
         else:
+            zone_name = zone_name.strip().upper()
             message = change_zone_light_state(zone_name, "OFF")
             dispatcher.utter_message(text=message)
 
@@ -290,7 +311,6 @@ class ActionZoneBrightness(Action):
 
     def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: dict):
         zone_name = tracker.get_slot("zone_name")
-        zone_name = zone_name.strip().upper()
         brightness_level = tracker.get_slot("brightness_level")
 
         if zone_name is None:
@@ -299,6 +319,7 @@ class ActionZoneBrightness(Action):
         if brightness_level is None:
             dispatcher.utter_message(text="Please specify a Brightness level.")
             return [AllSlotsReset()]
+        zone_name = zone_name.strip().upper()
 
         api_url = f"{api}/lights/update-brightness/{zone_name}?brightnessLevel={brightness_level}"
 
@@ -336,11 +357,18 @@ class ActionLightBrightness(Action):
         elif brightness_level > 100:
             dispatcher.utter_message(text="Specify a brightness between 0-100.")
             return [AllSlotsReset()]
+        if zone_name :
+            zone_name = zone_name.strip().upper()
 
-        api_url = f"{api}/lights/brightness/update/{light_id}?brightnessLevel={brightness_level}"
+        if light_id and brightness_level and zone_name:
+            message = update_brightness_light_using_zonename(light_id, zone_name, brightness_level)
+            dispatcher.utter_message(text=message)
+        else:
+            api_url = f"{api}/lights/brightness/update/{light_id}?brightnessLevel={brightness_level}"
+            print(light_id,zone_name,brightness_level)
 
-        message = update_brightness(api_url, brightness_level, f"light Id {light_id}")
-        dispatcher.utter_message(text=message)
+            message = update_brightness(api_url, brightness_level, f"light Id {light_id}")
+            dispatcher.utter_message(text=message)
 
         return [AllSlotsReset()]
 
@@ -515,7 +543,6 @@ class ActionConfirmSchedule(Action):
     ) -> list:
         confirmation = tracker.get_slot("confirmation")
         if confirmation and confirmation.lower() in ["yes", "confirm", "sure"]:
-            # Retrieve the slot values
             zone_name = tracker.get_slot("zone_name")
             zone_name = zone_name.strip().upper()
             light_state = tracker.get_slot("light_state")
@@ -585,7 +612,7 @@ class ActionConfirmSchedule(Action):
                 "lightstate": light_state,
                 "lightlevel": brightness_level,
                 "starttime": extract_start_time_millis(rule),
-                "endtime": brightness_level,
+                "endtime": extract_start_time_millis(end_time),
                 "recurrenceRule": rule.strip().upper(),
                 "startdate": extract_start_time_millis(rule),
                 "enddate": extract_start_time_millis(end_time),

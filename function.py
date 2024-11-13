@@ -1,6 +1,6 @@
 import requests
 import ast
-from datetime import datetime
+from datetime import datetime, timedelta
 
 api = "http://localhost:8080/api"
 
@@ -13,12 +13,8 @@ def change_light_state(light_id: str, state: str) -> str:
     try:
         change_response = requests.put(change_state_url, json={"lightstate": state})
 
-        if change_response.status_code == 200:
-            return f"Light {light_id} has been turned {state.lower()} 💡."
-        elif change_response.status_code == 208:
-            return f"Light {light_id} is already {state.lower()} 💡."
-        else:
-            return "Light ID Not Found 💡."
+        message = change_response.content.decode('utf-8').strip()
+        return f"{message} 💡"
 
     except requests.exceptions.ConnectionError:
         return "Error: Unable to connect to the light control API."
@@ -41,13 +37,8 @@ def change_zone_light_state(zone_name: str, state: str) -> str:
 
     try:
         change_response = requests.put(change_state_url, json={"lightstate": state})
-
-        if change_response.status_code == 200:
-            return f"{updated_zone_name} lights have been turned {state.lower()} 💡."
-        elif change_response.status_code == 208:
-            return f"{updated_zone_name} lights are already {state.lower()} 💡."
-        else:
-            return f" {updated_zone_name} Not Found."
+        message = change_response.content.decode('utf-8').strip()
+        return f"{message}💡"
 
     except requests.exceptions.ConnectionError:
         return "Error: Unable to connect to the light control API."
@@ -244,9 +235,12 @@ def convert_millis_to_time(millis: int) -> str:
         return "N/A"
 
     seconds = millis / 1000
-    time_obj = datetime.utcfromtimestamp(seconds)
-
-    return time_obj.strftime("%H:%M")
+    time_obj = timedelta(seconds=seconds)
+    
+    hours, remainder = divmod(time_obj.seconds, 3600)
+    minutes, seconds = divmod(remainder, 60)
+    
+    return f"{hours:02}:{minutes:02}:{seconds:02}"
 
 def list_zone_schedule(zone_name: str) -> str:
     list_all_zones_url = f"{api}/schedules/listbyzone/{zone_name}"
@@ -296,5 +290,30 @@ def list_zone_schedule(zone_name: str) -> str:
 
     except requests.exceptions.ConnectionError:
         return "Error: Unable to connect to the zone list API."
+    except Exception as e:
+        return f"An unexpected error occurred: {str(e)}"
+
+
+def change_light_state_using_zone_name(light_id : int , zone_name:str , light_state:str) -> str:
+
+    url_change_light_state = f"http://localhost:8080/api/lights/toggle?zoneName={zone_name}&lightId={light_id}&newState={light_state}"
+    try:
+        change_response = requests.put(url_change_light_state)
+        message = change_response.content.decode('utf-8').strip()
+        return f"{message} 💡"
+    except requests.exceptions.ConnectionError:
+        return "Error: Unable to connect to the light control API."
+    except Exception as e:
+        return f"An unexpected error occurred: {str(e)}"
+
+def update_brightness_light_using_zonename(light_id : int , zone_name:str , lightlevel:int) -> str:
+
+    url_change_light_state = f"{api}/lights/update/brightness?zoneName={zone_name}&lightId={light_id}&brightnessLevel={lightlevel}"
+    try:
+        change_response = requests.put(url_change_light_state)
+        message = change_response.content.decode('utf-8').strip()
+        return f"{message} 💡"
+    except requests.exceptions.ConnectionError:
+        return "Error: Unable to connect to the light control API."
     except Exception as e:
         return f"An unexpected error occurred: {str(e)}"
